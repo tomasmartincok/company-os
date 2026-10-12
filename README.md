@@ -1,20 +1,11 @@
 # company-os
 
-Prenosný súborový Second Brain a pracovný systém firmy používaný cez Codex alebo Claude Code, s voliteľným Obsidianom.
+Prenosný súborový Second Brain a pracovný systém firmy pre Codex alebo Claude Code, s voliteľným Obsidianom.
 
-**Aktuálny stav: dokumentácia na review pred tvorbou inštalátora.** Repozitár zatiaľ neobsahuje inštalátor ani funkčný workshopový release.
+**Aktuálny stav: kompletná špecifikácia v1.2 pred tvorbou inštalátora.** Repozitár zatiaľ neobsahuje inštalátor ani funkčný workshopový release.
 
-- [Kompletná špecifikácia v1](docs/specifikacia.md) — rozsah, Oliver, AI tím, procesy, pracovná tabuľa, znalostná báza, denné zápisky, onboarding, inštalácia a akceptačné kritériá.
-- [Detailný prompt pre Claude Code](docs/claude-review-prompt.md) — nezávislé read-only review na inom zariadení bez súkromného Second Brainu autora.
+[Prečítať špecifikáciu v1.2](docs/specifikacia.md)
 
-## Ako urobiť review
+Zadanie obsahuje Olivera, AI tím, procesný generátor, pracovnú tabuľu, znalostnú bázu, denné zápisky, vedený onboarding, chatovú inštaláciu, Mac/Windows a 18 akceptačných kritérií. Revízia zapracúva platformové review, ochranu personalizácie a pravidlá synchronizácie.
 
-Stiahni tento repozitár a otvor priečinok v Claude Code. Skopíruj prompt z druhého dokumentu. Claude má prečítať celú špecifikáciu, overiť aktuálne technické tvrdenia a vrátiť návrhy do chatu. Počas review nič neinštaluje ani nemení.
-
-Alternatívny pokyn do chatu:
-
-```text
-Prečítaj README.md a celý docs/claude-review-prompt.md v otvorenom repozitári company-os. Vykonaj read-only review docs/specifikacia.md presne podľa tohto promptu a vráť výsledok do chatu v slovenčine. Súbory ani konfigurácie neupravuj.
-```
-
-Verejná dokumentácia obsahuje celé zadanie. Interné podklady a prevádzkové údaje autora nie sú súčasťou repozitára; možnosť opätovne použiť pôvodný kód zostáva neovereným bodom.
+Verejný dokument je samostatne použiteľný bez súkromného Second Brainu autora. Pôvodný interný kód nie je publikovaný a jeho konkrétne opätovné použitie zostáva neovereným bodom. Review prompt sa odovzdáva samostatne v chate.
