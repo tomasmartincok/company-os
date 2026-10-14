@@ -1,19 +1,19 @@
 ---
 type: specification
 status: draft
-version: "1.3"
+version: "1.6"
 created: 2026-10-12
-updated: 2026-10-13
+updated: 2026-10-14
 ai-generated: true
 ---
 
-# company-os — kompletná špecifikácia v1.3
+# company-os — kompletná špecifikácia v1.6
 
 [Prehľad repozitára](../README.md)
 
-**Autorita:** úplné zadanie v1.3 po Claude review v1.2 a potvrdení autora 13.10.2026. Obsahuje prijaté produktové úpravy aj spresnenia technických kontraktov. Stav draft znamená zadanie pred implementáciou, nie vydaný inštalátor.
+**Autorita:** zadanie v1.6 so schválenými opravami Claude auditu a účastníckym obsahovým modulom. Draft neoznačuje hotový celý inštalátor; dokumentácia, komponentové testy a runtime majú samostatné dôkazy.
 
-**Aktuálna fáza:** publikácia špecifikácie. Inštalátor/závislosti sa v tejto fáze nevytvárajú. Kontrolný prompt sa odovzdáva iba v chate.
+**Aktuálna fáza:** špecifikácia a zdrojový účastnícky modul na review. Export/build/testy sú v repozitári; core inštalátor, Oliverove súbory, procesové modely a procesný manuál zatiaľ nie sú implementované. Kontrolný prompt sa odovzdáva iba v chate.
 
 **Repozitár:** [tomasmartincok/company-os](https://github.com/tomasmartincok/company-os), clone URL `https://github.com/tomasmartincok/company-os.git`.
 
@@ -31,11 +31,14 @@ Workshopový cieľ: človek vie zadať vlastnú úlohu, posúdiť výsledok, ná
 - AI tím: tvorba ďalších zamestnancov z vedeného rozhovoru, spoločné pravidlá a ľudský prehľad rolí.
 - **Procesný generátor:** jeden model → návod pre človeka, strojovo čitateľný podklad pre agenta, Mermaid a HTML manuál.
 - Jedna pracovná tabuľa s onboardingom, úlohami a pokračovaním medzi chatmi/modelmi.
+- Lokálne účastnícke materiály cez Začnite tu: pracovný list so siedmimi promptmi P1–P7, tri fiktívne vetvy s demo kontextom/A/B/kritériami a offline HTML čítačka s kopírovaním a ručnou zálohou.
 - Znalostná báza podľa LLM Wiki patternu: nemenné zdroje, odvodené poznatky, index a história zmien.
 - Denné zápisky: samostatný súbor pre každý deň, viac session ako ďalšie bloky.
 - Inventár nástrojov a zdrojov pravdy, oddelený od skutočných integrácií a oprávnení.
 - Codex a Claude Code; macOS a Windows; zvolený lokálny alebo synchronizovaný priečinok.
-- Čistý ukážkový proces a dva fiktívne vstupy, aby sa manuál dal otvoriť hneď po inštalácii.
+- **Tri pripravené štartovacie procesy:** nastavenie firemného základu, vytvorenie AI zamestnanca a vytvorenie/úprava pracovného postupu (SOP). Každý má model, textový postup, mapu a väzbu na Oliverov workflow.
+- **Hotový lokálny HTML manuál po inštalácii:** tri štartovacie procesy a Oliver, ich zodpovednosti a vzájomné odkazy; prehľady sa obnovujú pri tvorbe/úprave rolí a procesov.
+- Čistá fiktívna ukážka a dva vstupy na skúšku bez firemných účtov; označené oddelene od štartovacích systémových procesov.
 - Bezpečné opakovanie setupu, zachovanie personalizácie a dát, verzia a overiteľný stav inštalácie.
 
 ### Voliteľné ukážky
@@ -62,15 +65,17 @@ Balík pripraví pracovný priestor a postupy. Pripojenie firemných účtov, ex
 | Používateľ, komunikácia a pracovné preferencie | `O mne.md` |
 | Potvrdené firemné fakty a rozhodnutia | `Prehľad firmy.md` |
 | Základné agentové pravidlá a načítanie kontextu | `AGENTS.md`; `CLAUDE.md` je iba import |
-| Ukladanie, názvy, metadáta a odkazy | `Mapa systému.md` |
+| Základná schéma metadát | `AI OS/Systém/Schémy/poznamka.schema.json` (package); ľudský návod je odvodený |
+| Základné ukladanie, deduplikácia a odkazy | `AI OS/Postupy/ukladanie-a-deduplikacia.md` (package) |
+| Firemný routing a kompatibilné rozšírenia metadát | `Mapa systému.md` (seeded/user); odkazuje na balíkový základ |
 | Vlastné pravidlá a nastavenia používateľa vrátane denného trailu | `Mapa systému.md`, sekcia Vlastné pravidlá a nastavenia |
 | Inventár nástrojov a dôkazy pripojenia | `Práca/Firma/Nástroje.md` |
-| Definícia etáp, šablóny otázok a dôkazy dokončenia | `AI OS/Tím/oliver/workflows/nastavenie-systemu/SKILL.md` |
+| Definícia etáp, šablóny otázok a kritériá dokončenia | `Procesy/system-nastavenie-firmy/model.yaml`; Oliverov workflow je odvodený agentový vstup |
 | Index tímu a routing | Generovaný `AI OS/Tím/index.md` z kanonických profilov |
 | Checkboxy dokončenia, aktuálne nezodpovedané otázky nastavenia, stav úloh, vlastník a jediný ďalší krok | `Pracovná tabuľa.md` |
 | Zadanie, odpovede a otvorené otázky konkrétnej úlohy | Jej pracovný dokument pri príslušnom subjekte |
 | Definícia zamestnanca | Jeho jeden kanonický profil `SKILL.md` |
-| Potvrdený proces | Jeho `model.yaml` |
+| Definícia štartovacieho alebo vlastného procesu | Jeho jeden `model.yaml`; text, mapa, HTML a procesné kroky agentového workflowu sú odvodené |
 | Pôvodné podklady | Originál pri subjekte alebo v `Znalostná báza/Zdroje/` |
 | Odvodené poznatky | `Znalostná báza/Spracované poznatky/` so zdrojmi |
 | História práce | Dátovaný denný súbor |
@@ -119,13 +124,24 @@ Používateľ môže už mať CRM/task manager. Onboarding to zistí. Živý ext
 │   │       │   ├── tvorba-procesu/SKILL.md
 │   │       │   └── sprava-znalostnej-bazy/SKILL.md
 │   │       └── references/
-│   ├── Postupy/             # iba skutočne spoločné postupy
+│   ├── Postupy/             # package, spoločné pre roly
+│   │   ├── pracovna-tabula.md
+│   │   ├── ukladanie-a-deduplikacia.md
+│   │   ├── inbox-a-napady.md
+│   │   ├── denny-trail.md
+│   │   └── kontrola-vysledku.md
 │   └── Systém/
+│       ├── Schémy/
+│       │   └── poznamka.schema.json
 │       ├── Návody/
+│       │   └── Metadáta.md     # generated zo schémy
 │       ├── Šablóny/
 │       └── Generátor/
 ├── Procesy/
-│   └── <stabilné-id>/
+│   ├── system-nastavenie-firmy/   # model.yaml + postup.md + postup.mmd
+│   ├── system-tvorba-zamestnanca/ # model.yaml + postup.md + postup.mmd
+│   ├── system-tvorba-postupu/     # model.yaml + postup.md + postup.mmd
+│   └── <vlastné-stabilné-id>/
 │       ├── Príprava.md
 │       ├── model.yaml
 │       ├── postup.md
@@ -133,6 +149,13 @@ Používateľ môže už mať CRM/task manager. Onboarding to zistí. Živý ext
 ├── Manuál/
 │   ├── index.html
 │   ├── tim.html
+│   ├── procesy/
+│   │   └── <proces-id>.html       # pre každý z troch štartovacích aj vlastných modelov
+│   └── assets/
+├── Workshop/
+│   ├── pracovny-list-a-prompty.md
+│   ├── ukazkove-vstupy.md
+│   ├── index.html
 │   └── assets/
 ├── Ukážky/
 ├── .agents/skills/
@@ -142,22 +165,22 @@ Používateľ môže už mať CRM/task manager. Onboarding to zistí. Živý ext
 └── .os-starter/
 ```
 
-Strom je cieľová šablóna, nie tvrdenie o existujúcej implementácii. Vlastný procesový adresár vzniká pri skutočnom zadaní; potvrdený model až po obsahovom rozhodnutí. Ukážkový proces je jasne označený a oddelený od vlastných procesov. Index s nulou vlastných procesov/zamestnancov musí byť platný.
+Strom je cieľová šablóna, nie hotová implementácia. Tri štartovacie procesy a Oliver sú povinným počiatočným obsahom úspešnej inštalácie. Vlastný procesový adresár vzniká pri skutočnom zadaní; vlastný potvrdený model až po obsahovom rozhodnutí. Fiktívne ukážky sú označené a oddelené od štartovacích systémových postupov aj vlastných procesov. Register s nulou vlastných procesov/odborných zamestnancov je platný, ale po úspešnej inštalácii zobrazuje tri štartovacie procesy a Olivera.
 
 Viditeľné názvy sú slovenské a popisné. `Atlas`, `Inbox` a `AI OS` majú vysvetlenie účelu. Povinné platformové názvy `AGENTS.md`, `SKILL.md`, `.agents`, `.codex`, `.claude` zostávajú zachované. Technické ID a názvy adaptérov sú stabilné, krátke a bez diakritiky; ľudské mená môžu mať diakritiku.
 
-**Predvolené nastavenie v1.3:** balík obsahuje jednoriadkový `CLAUDE.md` s `@AGENTS.md`. Je to technický import, neobsahuje druhú kópiu pravidiel. Priame čítanie AGENTS v Claude závisí od verzie/režimu a prítomnosti nadradených CLAUDE súborov; import je zvolená kompatibilná cesta. Preflight vypíše relevantné projektové/nadradené/globálne pokyny a konflikty vrátane Codex override súborov. Cudzí config nemení. Import nezaručuje izoláciu od nadradených pravidiel ani prekonanie managed režimu; skutočné načítanie musí potvrdiť nová session. [Claude — Memory](https://code.claude.com/docs/en/memory#agentsmd)
+**Predvolené nastavenie v1.6:** balík obsahuje jednoriadkový `CLAUDE.md` s `@AGENTS.md`. Je to technický import, neobsahuje druhú kópiu pravidiel. Priame čítanie AGENTS v Claude závisí od verzie/režimu a prítomnosti nadradených CLAUDE súborov; import je zvolená kompatibilná cesta. Preflight vypíše relevantné projektové/nadradené/globálne pokyny a konflikty vrátane Codex override súborov. Cudzí config nemení. Import nezaručuje izoláciu od nadradených pravidiel ani prekonanie managed režimu; skutočné načítanie musí potvrdiť nová session. [Claude — Memory](https://code.claude.com/docs/en/memory#agentsmd)
 
 ## 4. Obsah základných dokumentov
 
 | Súbor | Požadovaný obsah |
 |---|---|
-| `Začnite tu.md` | Jednostránkový vstup: účel systému, potrebný klient/účet, otvorenie koreňa, offline dostupnosť, očakávané UI schválenia, vyvolanie Olivera, odkaz na `Pracovná tabuľa.md#Dokončenie company-os`, príklady zadaní, manuál a recovery. |
+| `Začnite tu.md` | Jednostránkový vstup: účel systému, potrebný klient/účet, otvorenie koreňa, offline dostupnosť, očakávané UI schválenia, vyvolanie Olivera, odkaz na `Pracovná tabuľa.md#Dokončenie company-os`, príklady zadaní, manuál a recovery; blok Workshop: vlastný zamestnanec s poradím P1–P7, odkazy na lokálny pracovný list/ukážky/čítačku a po dodaní skutočného manuálu na `Manuál/index.html`. |
 | `AGENTS.md` | Balíkom udržiavaný vstup: poradie čítania, načítanie indexu tímu pri výbere roly, pracovné zásady, autorizácia, ukladanie, pokračovanie, denné zápisky a kontrola. Odkazuje na Vlastné pravidlá a nastavenia v `Mapa systému.md`. Cieľ najviac 8 KiB UTF-8; nadradená reťaz sa overuje osobitne. |
 | `CLAUDE.md` | Jednoriadkový technický import `@AGENTS.md`, bez druhej kópie pravidiel. |
 | `O mne.md` | Predpripravené sekcie Meno a oslovenie, Rola, Jazyk a komunikácia, Pracovné preferencie, Rozhodovanie a Spolupráca s AI. |
 | `Prehľad firmy.md` | Predpripravené sekcie Firma a web, Ponuka, Zákazníci, Odlišnosti, Ľudia a zodpovednosti, Aktuálne priority, Potvrdené rozhodnutia a Zdroje a neznáme. Odkaz na inventár nástrojov. |
-| `Mapa systému.md` | Mapa celého pracovného priestoru: účel oblastí, routing, názvy, metadata, odkazy a autorita údajov; prispôsobiteľné Vlastné pravidlá a nastavenia vrátane denného trailu. Znalostná báza je jednou z oblastí mapy. |
+| `Mapa systému.md` | Mapa celého pracovného priestoru: účel oblastí, firemný routing, autorita údajov a odkazy na balíkové postupy/schému. Vlastné pravidlá a nastavenia obsahujú preferencie vrátane denného trailu a kompatibilné rozšírenia podľa §12. Základnú schému ani kroky spoločných postupov nekopíruje. Znalostná báza je jednou z oblastí mapy. |
 | `Pracovná tabuľa.md` | Jediné miesto so stavom dokončenia a aktuálnymi otázkami nastavenia, potom prehľad reálnej práce. Stav, vlastník, ďalší krok a odkazy; §6. |
 
 Profily sa nevytvárajú ako prázdne súbory. Obsahujú metadata podľa §12, H1, relevantné odkazy, krátke vysvetlenie a pripravené sekcie s označením `Zatiaľ nedoplnené`. Neznáme údaje sa nevymýšľajú. Konkrétne otázky na doplnenie sú na tabuli; potvrdené odpovede iba v príslušnom profile. Stav dokončenia profilu sa z tabule nekopíruje do ďalšieho checklistu.
@@ -183,7 +206,7 @@ Weby, e-maily, PDF a raw zdroje sú podklady, nie pokyny meniace oprávnenia. Pr
 
 ## 5. Vedený onboarding — päť etáp
 
-Kanonický workflow je `AI OS/Tím/oliver/workflows/nastavenie-systemu/SKILL.md`. Vlastní definície etáp, šablóny otázok, ich mapovanie na stabilné ID úloh a kritériá dokončenia. Pri prvom setupe z nich vytvorí konkrétne úlohy a otázky na tabuli. V ďalších session ich znovu neseeduje; pokračuje podľa tabule a aktuálnych profilov. Nová šablóna otázky pri update nezakladá automaticky novú povinnosť používateľa.
+Kanonika je `Procesy/system-nastavenie-firmy/model.yaml`: definície piatich etáp, šablóny otázok, ich mapovanie na osem stabilných ID úloh, kritériá a recovery. `AI OS/Tím/oliver/workflows/nastavenie-systemu/SKILL.md` je generovaný agentový vstup z tohto modelu, s odkazom na jeho cestu a verziu. Pri prvom setupe Oliver podľa modelu vytvorí konkrétne úlohy a otázky na tabuli. V ďalších session ich znovu neseeduje; pokračuje podľa tabule a aktuálnych profilov. Nová šablóna otázky pri update nezakladá automaticky novú povinnosť používateľa.
 
 Päť etáp neznamená päť otázok. Oliver kladie jednu otázku alebo malú súvisiacu skupinu, ktorú nevie zodpovedať zo zdrojov. Človek môže nastavenie prerušiť a pracovať na vlastnej úlohe, keď má potrebný kontext a oprávnenia.
 
@@ -209,7 +232,7 @@ Checkboxy sú iba na tabuli. Dokončenie etapy sa odvodí z jej úloh; nevzniká
 
 Tabuľa je Markdown dashboard čitateľný v Obsidiane bez pluginov. Sekcie: **Dokončenie company-os / Teraz / Čakáme na / Neskôr / Dokončené**. Základné nastavenie má všetky aktuálne úlohy a nezodpovedané otázky na jednom mieste. Odpovede a dôkazy sa ukladajú do autoritatívneho profilu alebo pracovného dokumentu a tabuľa na ne odkazuje.
 
-Každá úloha má nemenné ID v HTML komentári na riadku checkboxu: `<!-- os:task:<id> -->`. ID neurčuje text ani poradové číslo riadku; viditeľný text môže človek meniť. Vlastník a jediný konkrétny ďalší krok patria tabuli; termín iba ak je dohodnutý. Pri nastavovaní sú tu aj otázky, ktoré ešte treba zodpovedať. Pri bežnej úlohe je na tabuli stručný krok a odkaz, podrobný dotazník patrí jej pracovnému dokumentu.
+Každá úloha má nemenné ID v HTML komentári na riadku checkboxu: `<!-- os:task:<id> -->`. ID sa neodvodzuje z textu ani poradového čísla riadku; viditeľný text môže človek meniť. Vlastník a jediný konkrétny ďalší krok patria tabuli; termín iba ak je dohodnutý. Pri nastavovaní sú tu aj otázky, ktoré ešte treba zodpovedať. Pri bežnej úlohe je na tabuli stručný krok a odkaz, podrobný dotazník patrí jej pracovnému dokumentu.
 
 ```markdown
 # Pracovná tabuľa
@@ -263,7 +286,9 @@ Každá úloha má nemenné ID v HTML komentári na riadku checkboxu: `<!-- os:t
 ## Dokončené
 ```
 
-Vzorka je špecifikácia seeded obsahu. Skutočný setup odklikne iba preukázané kroky a odstráni už zodpovedané otázky alebo ich označí ako vyriešené s odkazom na profil. Nevkladá fiktívne klientské úlohy. Zápis `Profil: doplniť` nie je mŕtvy wiki-link. Preflight údaje a technické verify/recovery konkrétneho zariadenia patria lokálnej evidencii, tabuľa drží používateľský ďalší krok.
+Vzorka je špecifikácia seeded obsahu. Skutočný setup odklikne iba preukázané kroky. Zodpovedanú otázku označí `Vyriešené → odkaz na profil/detail`; nemaže ju a nekopíruje sem odpoveď. Nevkladá fiktívne klientské úlohy. Zápis `Profil: doplniť` nie je mŕtvy wiki-link. Preflight údaje a technické verify/recovery konkrétneho zariadenia patria lokálnej evidencii, tabuľa drží používateľský ďalší krok.
+
+**ID a ručné zmeny:** nové jednoznačne používateľské úlohy dostanú pred prvým agentovým stavovým zápisom nové stabilné `user-<uuid>` ID. Riadok bez ID, ktorý môže byť upravenou štartovacou úlohou, zostane zachovaný; agent navrhne obnovenie väzby a vyžiada len potrebné objasnenie. Chýbajúce štartovacie ID nevyvolá tichý re-seed ani domnienku dokončenia. Duplicitné ID zastaví stavovú mutáciu dotknutých riadkov; človek potvrdí, či ide o duplicitu alebo dve úlohy, potom sa opravia iba ich väzby. Nedotknutá práca môže pokračovať. Pred aj po patchi sa overí jedinečnosť ID, zachovanie checkboxov a odkazy na odpovede.
 
 Pri „chcem popísať proces“ Oliver najprv vyhľadá existujúcu prípravu, uloží cieľ/obsahové otázky pri procese a pridá jednu položku na tabuľu. Po potvrdení pripraví model a vygeneruje pohľady. Prerušenie zachová podklady; nový chat nadviaže na tabuľu a detail. Ukončená príprava ďalej nevedie druhý normatívny postup popri modeli.
 
@@ -293,7 +318,7 @@ Každý zamestnanec má vlastný priečinok `AI OS/Tím/<id>/`: jeden rolový `S
 - Subagent je dočasný vykonávateľ ohraničeného zadania, nie názov vnoreného workflowu.
 - Generátor vytvára používateľské adaptéry len z rolových profilov. Vnorené workflowy načítava rola podľa potreby; nevystavujú sa automaticky ako ďalší zamestnanci ani samostatné slash príkazy.
 
-`AI OS/Postupy/` slúži iba pre skutočne spoločné postupy viacerých rolí. Každý postup má jednu kanoniku; profil odkazuje na existujúci workflow alebo spoločný postup, nekopíruje jeho obsah. Generátor rozlišuje rolové a workflow SKILL súbory podľa cesty a metadát. Oliverov hlavný profil je seeded, jeho distribuované systémové workflowy sú package; používateľské workflowy sú user. Zmena package workflowu sa chráni ako každá lokálna úprava (§13).
+`AI OS/Postupy/` slúži iba pre skutočne spoločné postupy viacerých rolí. Každý postup má jednu kanoniku; profil odkazuje na existujúci workflow alebo spoločný postup, nekopíruje jeho obsah. Generátor rozlišuje rolové a workflow SKILL súbory podľa cesty a metadát. Oliverov hlavný profil je seeded. Tri štartovacie procesové modely sú seeded, používateľ ich môže neskôr prispôsobiť; ich tri Oliverove workflowy a všetky textové/mapové/HTML pohľady sú generated. Zvyšný distribuovaný workflow správy znalostnej bázy je package, kým nemá vlastný procesný model. Vlastný nemodelovaný workflow je user; po vedomom prevedení na proces sa jeho kroky/otázky presunú do jedného user modelu a agentový workflow sa generuje. Package aj lokálne zmenené generated súbory majú ochranu podľa §13; žiadne tiché zahodenie úprav. Profil ostáva kanonikou roly, model kanonikou opakovateľného postupu.
 
 ### Vedený rozhovor pre odborného zamestnanca
 
@@ -314,9 +339,39 @@ Procesný generátor je povinná schopnosť v1. Výber implementácie má zachov
 
 ### Jeden model, viac pohľadov
 
-Procesový model `model.yaml` má stabilné ID, názov, verziu/dátum, účel/spúšťač, ľudského vlastníka, zúčastnené role, vstupy, výsledok, zdroje, pravidlá/hranice, kroky, rozhodovacie vetvy, kontrolu, chyby/recovery a dôkazy. Agent číta štruktúru a príslušné skills; samotný diagram nie je deterministický vykonávač.
+Procesový model `model.yaml` má stabilné ID, jedinečné stabilné step ID a odkazy vetiev na tieto step ID, názov, verziu/dátum, účel/spúšťač, ľudského vlastníka, zúčastnené role, vstupy, výsledok, zdroje, pravidlá/hranice, kroky, rozhodovacie vetvy, kontrolu, chyby/recovery a dôkazy. Agent číta štruktúru a príslušné skills; samotný diagram nie je deterministický vykonávač.
 
 Generátor z modelu vytvorí `postup.md`, `postup.mmd` a HTML text/mapu. Manuál zobrazí prehľad procesov, prehľad tímu a vzájomné odkazy. Obsah textu a mapy musí sedieť; úprava sa vykonáva v modeli, potom build/check.
+
+### Povinný štartovací obsah — tri hotové procesy
+
+Úspešná nová inštalácia doručí už pripravené modely a vygenerované texty/mapy/HTML. Účastník ich nemusí najprv navrhnúť. Sú to použiteľné systémové postupy, nie dôkaz, že firma dokončila nastavenie alebo vykonala proces. Ľudský vlastník je používateľ v tejto funkcii; konkrétne meno sa doplní z potvrdeného profilu. Oliver vedie rozhovor a vykonáva autorizované dokumentové kroky, používateľ potvrdzuje fakty, zodpovednosti a význam výsledku.
+
+| Proces a stabilné ID | Oliverov workflow | Vstupy a výstup | Kontrola |
+|---|---|---|---|
+| **Nastavenie firemného základu** `system-nastavenie-firmy` | `nastavenie-systemu` | Funkčný root/klient a opis/web/podklady → prepojené osobné a firemné údaje, priority, nástroje/hraničné pravidlá a rozpracované úlohy nastavenia. | Potvrdené fakty so zdrojmi, neznáme označené, aktuálne otázky/ďalší krok na tabuli; nadviazanie v novom chate. |
+| **Vytvorenie AI zamestnanca** `system-tvorba-zamestnanca` | `tvorba-zamestnanca` | Vybraná oblasť a požadovaný výsledok → vlastný rolový priečinok/profil, zdroje, zodpovednosti, hranice a návrh prvého workflowu, aktualizovaný register/adaptéry/manuál. | Potvrdený profil, stabilné ID, správne natívne vyvolanie; rola nepridáva implicitné prístupy. Overenie pracovného workflowu nadväzuje cez tretí proces. |
+| **Vytvorenie alebo úprava pracovného postupu (SOP)** `system-tvorba-postupu` | `tvorba-procesu` | Rola, konkrétna opakovaná úloha a zdroje/existujúci postup → jeden model, agentový workflow, text, Mermaid a HTML; dôkazy dvoch vstupov alebo otvorený checkpoint. | Vstupy/kroky/vetvy/vlastníci/výstup/kontrola/recovery úplné, význam mapy a inštrukcií zhodný; prvý test, oprava a druhý vstup v novom chate. |
+
+Každý model obsahuje účel/spúšťač, ľudského vlastníka, agentové role, vstupy/výstupy, otázky a miesto odpovedí, kroky/rozhodnutia, schvaľovanie, chyby/recovery a kritériá dôkazu. Nastavenie používateľa nie je fiktívna hotová firma: model má všeobecné otázky a hranice, osobné/firemné odpovede zostávajú v príslušných dokumentoch.
+
+### Jedna kanonika modelu a agentové vedenie
+
+Pre tri štartovacie procesy sú kroky, otázky, vetvy a kritériá editovateľné iba v `Procesy/<id>/model.yaml`. Z modelu sa odvodia `postup.md`, `postup.mmd`, `Manuál/procesy/<id>.html` a príslušný workflow SKILL. Generovaný workflow má štandardné name/description/metadata, označenie pôvodu a explicitnú cestu/verziu modelu; nevlastní druhý ručne editovateľný postup. Oliverov rolový profil odkazuje na tieto vstupy, nenesie ich kópie. Spoločné zásady AGENTS/Mapy systému sa do modelu nekopírujú; model na ne odkazuje.
+
+Oliver pri vedenom rozhovore skutočne použije príslušný aktuálny model a odvodený workflow: kladie otázky podľa kroku, uloží odpoveď na určené miesto, rešpektuje potvrdenie a doplní tabuľu/denný trail. HTML slúži človeku ako pohľad na ten istý postup. Zmena modelu obnoví všetky dotknuté pohľady; generátor preverí model ID/verziu, jedinečnosť step ID a platnosť všetkých krokových/vetvových odkazov vo workflowe a ostatných pohľadoch. Zastaraný workflow/manuál sa neoznačí ako aktuálny.
+
+Pri vlastnom odbornom postupe má model väzbu na stabilné role ID a workflow cestu. Prevedenie existujúceho nemodelovaného SKILL postupu najprv zachová pôvodný obsah a vyžaduje potvrdenie významu; po prijatí nesmú zostať dve súbežne normatívne verzie. Register procesov/tímu sa odvodzuje z modelov/profilov, nevzniká ďalší ručne udržiavaný zoznam.
+
+### HTML manuál dostupný hneď po inštalácii
+
+`Manuál/index.html` je pripravený ľudský vstup s prehľadom procesov a odkazom na tím; `Manuál/tim.html` obsahuje mená/roly, zodpovednosti a väzby na procesy. Proces možno otvoriť ako čitateľný text a mapu s vlastníkmi, vstupmi, výstupmi a kontrolou. Prvý stav obsahuje Olivera a všetky tri štartovacie procesy; odborný tím a vlastné procesy môžu byť zatiaľ prázdne. Štartovacie systémové procesy a vlastné firemné procesy majú zrozumiteľné označenie v tom istom prehľade.
+
+Vytvorenie/úprava zamestnanca alebo modelu obnoví dotknuté procesové stránky, prehľad procesov, tím/routing/adaptéry a vzájomné odkazy z aktuálnych vstupov. Vlastný tím/práca sa pritom neresetuje. Ak generovanie zlyhá, posledný platný výstup sa zachová, stav sa označí a vznikne konkrétny recovery krok; úloha nie je hotová iba vytvorením profilu/modelu. Platí existujúci offline kontrakt, pribalené assets, bezpečný renderer a prenosné odkazy. Návod Začnite tu odkazuje na úvod manuálu.
+
+### Workshopová cesta
+
+Tomáš môže hneď ukázať proces nastavenia, tvorby zamestnanca a tvorby postupu. Účastník najprv doplní kontext a priority do prepojených dokumentov; potom vyberie odbornú rolu, s Oliverom ju vytvorí, opíše jej jednu opakovanú činnosť a overí workflow na dvoch vstupoch. Záverečný nový chat nadviaže na profily, rozhodnutia, tabuľu a denné zápisky. Príprava marketingového zamestnanca môže používať všeobecný vzor alebo vlastný návrh; nevynucuje sa interný tím autora. Orientačných 45 minút na kontext je plánovací predpoklad po funkčnej inštalácii, nie overený čas setupu.
 
 ### Požadované generalizácie
 
@@ -361,7 +416,22 @@ Týždenný/mesačný prehľad vzniká na požiadanie z vybraného obdobia so zd
 
 ## 11. Skills a pripravené ukážky
 
-Povinné systémové schopnosti Olivera: vysvetlenie/obnovenie onboardingu, tvorba zamestnanca, tvorba/úprava procesu a obnovenie manuálu, pracovná tabuľa, bezpečné ukladanie a deduplikácia, nápady/Inbox, denné zápisky, znalostná báza a kontrola výsledku. Oliverove detailné postupy sú v `AI OS/Tím/oliver/workflows/`; hlavný profil odkazuje na relevantný workflow a spoločné pravidlá v `Mapa systému.md`. Zdieľané postupy v `AI OS/Postupy/` nemajú druhú kópiu pod rolou.
+Oliver pri konkrétnej činnosti načíta príslušný postup podľa tejto mapy. Jeho hlavný profil a AGENTS nesú triggery/pointery; kroky majú jednu kanoniku. Zdieľaný postup sa nekopíruje pod každú rolu. Nasledujúce cesty sú povinný obsah budúceho core balíka, nie tvrdenie, že už vznikli v tomto repozitári.
+
+| Schopnosť / spúšťač | Kanonický obsah | Trieda a agentový vstup |
+|---|---|---|
+| Vysvetliť/nastaviť systém, pokračovať v onboardingu | `Procesy/system-nastavenie-firmy/model.yaml` | seeded; generated `AI OS/Tím/oliver/workflows/nastavenie-systemu/SKILL.md` |
+| Vytvoriť zamestnanca | `Procesy/system-tvorba-zamestnanca/model.yaml` | seeded; generated `AI OS/Tím/oliver/workflows/tvorba-zamestnanca/SKILL.md` |
+| Vytvoriť/upraviť SOP, obnoviť procesný manuál | `Procesy/system-tvorba-postupu/model.yaml` | seeded; generated `AI OS/Tím/oliver/workflows/tvorba-procesu/SKILL.md`; engine realizuje build |
+| Pracovať s tabuľou, ID a pokračovaním | `AI OS/Postupy/pracovna-tabula.md` | package; živý stav iba v tabuli/detailoch podľa §6 |
+| Uložiť/prepojiť výsledok, deduplikovať a obnoviť zápis | `AI OS/Postupy/ukladanie-a-deduplikacia.md` | package; odkazuje na schému a dva zápisové kontrakty §12 |
+| Zachytiť nápad alebo spracovať Inbox | `AI OS/Postupy/inbox-a-napady.md` | package; používa firemný routing z Mapy |
+| Zapísať denný trail alebo pripraviť súhrn | `AI OS/Postupy/denny-trail.md` | package; uplatní používateľovo nastavenie a §10 |
+| Spracovať/prehľadať znalostnú bázu | `AI OS/Tím/oliver/workflows/sprava-znalostnej-bazy/SKILL.md` | package nemodelovaný workflow; Pravidlá znalostnej bázy naň odkazujú |
+| Skontrolovať výsledok a hranice dôkazu | `AI OS/Postupy/kontrola-vysledku.md` | package; podľa rizika nezávislý verifier, bez novej povinnej roly |
+| Validovať metadata a typy poznámok | `AI OS/Systém/Schémy/poznamka.schema.json` | package; validator a generated `AI OS/Systém/Návody/Metadáta.md` čítajú ten istý kontrakt |
+
+Mapa systému drží firmou zvolený routing, preferencie a povolené rozšírenia. Spoločné návody odkazujú na autoritatívne profily/tabuľu/schémy; nevytvárajú druhý živý stav ani ďalšie editovateľné zoznamy procesových krokov.
 
 Jednoduchá nezávislá kontrola porovná zadanie, zdroje a výsledok, s verdiktom PASS/PARTIAL/FAIL/UNKNOWN. Samostatný verifier môže byť voliteľnou rolou; ak je nutné nezávislé overenie, autor svojho výsledku sa nevydáva za nezávislého reviewera.
 
@@ -369,9 +439,23 @@ Pribalená ukážka spracovania zápisu zo stretnutia: fiktívny text → fakty/
 
 Voliteľný Blog Writer prenesie jednoduché jadro používaného postupu: zdroje → osnova → potvrdenie → text → kontrola. Ukážka má vlastný priečinok a deklarované závislosti; aktivovaný odborný postup patrí príslušnému zamestnancovi. CMS a distribúcia obsahu vyžadujú osobitné nastavenie. Hlas firmy a zdroje sa doplnia; publikovanie nie je implicitnou časťou príkladu.
 
+### Lokálne účastnícke materiály a kopírovanie
+
+Po úspešnej plnej inštalácii otvorí účastník v Obsidiane `Začnite tu.md` → **Workshop: vlastný zamestnanec** → lokálny pracovný list, zvolenú ukážkovú vetvu a HTML manuál. Materiály sa neposielajú počas workshopu mailom. Pracovný list obsahuje P1 firemný základ, P2 odborný zamestnanec, P3 pracovný postup, P4 vstup A, P5 oprava, P6 vstup B v novom chate, P7 pokračovanie doma. Každý dlhý prompt je samostatný kopírovateľný textový blok, s názvom/kontrolným bodom a upozornením doplniť hranaté zátvorky. Živý stav sa nesleduje v čítačke, patrí tabuli.
+
+Ukážky sú tri voliteľné vetvy: marketing, inbox bez konektora a stretnutie. Každá obsahuje vlastný demo kontext, dva odlišné fiktívne vstupy A/B a kritériá výsledku. Označenie fiktívnosti je viditeľné aj súčasťou kopírovaného dema. Kombinovaná HTML akcia kopíruje označenie/izoláciu + kontext práve tej vetvy + presný zvolený vstup; celý kopírovaný text je viditeľný. Nevytvára skryté inštrukcie ani nemieša vetvy. Markdown umožňuje rovnaký výsledok ručne. Demo údaje patria iba k oddelenému demo zadaniu, neprepisujú `Prehľad firmy.md`, `O mne.md` ani potvrdené priority/rozhodnutia; duplicitný HQ sa nezakladá.
+
+HTML používa lokálne assets, natívne tlačidlá, viditeľný focus a prístupné hlásenie stavu. Skopírované oznámi až po úspechu clipboard operácie. Pri odmietnutí/absencii API označí presný blok a ponúkne Ctrl/Cmd+C bez falošného úspechu. Bez JavaScriptu je celý text čitateľný/označiteľný. Overiť diakritiku, nové riadky, klávesnicu, 320px/200% zoom, success aj failure. Konkrétne Obsidian tlačidlo/režim a správanie file:// sa negarantujú bez skúšky; Markdown fallback je súčasť návodu.
+
+### Kanonika, export a hranica obsahového modulu
+
+Obsah vzniká z dvoch autoritatívnych účastníckych podkladov. Release nesie deterministické sanitizované snapshoty a provenance s logickými source ID/hashmi, bez absolútnych súkromných ciest. Snapshoty sa neupravujú ako druhá nezávislá redakčná verzia; aktualizácia ide zo zdroja cez explicitný export a diff. HTML/Markdown sú odvodené pohľady. Distribuované Markdown podklady majú verejné metadata podľa §12 a vzájomné existujúce relatívne odkazy pod H1; súkromné metadata sa neprenášajú. Fragment zdedí metadata koreňového Začnite tu pri integrácii. Export zachová presné texty siedmich promptov a šiestich raw vstupov; odstráni interný frontmatter, vaultové wiki-linky, distribučné/lektorove režijné poznámky a premení kritériá na účastnícke označenie. Interný lektorský scenár sa nedistribuuje. Zostavenie z pribalených snapshotov musí fungovať bez súkromného vaultu a siete.
+
+Obsahový modul sa vytvára v čistom/staged výstupe; nesmie prepísať používateľský workspace. Opakované zostavenie je deterministické, existujúci cudzí/neznámy obsah má konflikt, pri obnove sa zachová. Budúci plný inštalátor materiály začlení ako package/generated obsah a do seeded Začnite tu vloží spravovaný blok iba pri prvom vytvorení alebo potvrdenej migrácii. Existujúcu personalizáciu/checkboxy neprepisuje. Samostatný fragment deklaruje napojenie na core manuál, nezakladá jeho prázdnu napodobeninu. Build modulu, runtime čítačky, Obsidian a čistý používateľský pilot sú samostatné dôkazy; hotový modul neznamená hotový celý inštalátor.
+
 ## 12. Metadáta, zápisy a technické adaptéry
 
-`Mapa systému.md` vlastní schému pracovných poznámok a routing celého priestoru; `Znalostná báza/Pravidlá.md` na ňu odkazuje a dopĺňa spracovanie zdrojov. LLM Wiki nie je schéma celého OS.
+`AI OS/Systém/Schémy/poznamka.schema.json` je jediný balíkový základ metadát; obsahuje aj popisy polí a mapovanie distribuovaných šablón. Validator ho načíta, neudržiava druhý enum v kóde. Návod Metadáta sa generuje zo schémy. `Mapa systému.md` vlastní firemný routing a dovolené rozšírenia, odkazuje na balíkový základ. `Znalostná báza/Pravidlá.md` dopĺňa spracovanie zdrojov; LLM Wiki nie je schéma celého OS.
 
 ### Metadata a prepájanie
 
@@ -379,7 +463,7 @@ Každá nová alebo agentom vytvorená pracovná Markdown poznámka vrátane see
 
 | Pole | Typ a pravidlo |
 |---|---|
-| `type` | String; typ poznámky podľa šablóny, napr. identity, company, map, board, note, daily, client, project, index alebo knowledge. |
+| `type` | String zo základného enumu `identity`, `company`, `map`, `board`, `guide`, `tool`, `preparation`, `note`, `daily`, `client`, `project`, `index`, `knowledge`, `idea`, `log`; ďalšie typy len cez deklarované rozšírenia nižšie. |
 | `status` | String `draft`, `active` alebo `archived`; stav dokumentu nie je schválenie výsledku ani stav úlohy. |
 | `created`, `updated` | Properties dátum ISO `YYYY-MM-DD`; čas udalosti v tele môže byť ISO s časovým pásmom. |
 | `owner` | String s potvrdeným vlastníkom; pred určením `neurčený`. |
@@ -388,9 +472,13 @@ Každá nová alebo agentom vytvorená pracovná Markdown poznámka vrátane see
 | `tags` | YAML zoznam stringov; pri AI texte obsahuje `🤖`, ďalšie podľa typu. |
 | `project`, `client` | Voliteľné stringové identifikátory/odkazy; iba keď sa poznámka týka konkrétneho subjektu. |
 
+**Priradenie šablón:** O mne→`identity`; Prehľad firmy→`company`; Mapa systému→`map`; Pracovná tabuľa→`board`; Začnite tu, Inbox README a procesový postup.md→`guide`; Nástroje→`tool`; procesová Príprava→`preparation`; pracovný dokument a účastnícke Workshop Markdown podklady→`note`; denný súbor→`daily`; _klient→`client`; projektový kontext→`project`; tímový/znalostný index a rozcestník→`index`; spracovaný poznatok→`knowledge`; nápad→`idea`; appendový znalostný log→`log`. Technické súbory a originály majú výnimky uvedené nižšie, bez vynútenia note YAML.
+
+**Rozšírenia firmy:** jediná deklarácia je frontmatter Mapy: `company-os-extra-types` (zoznam nových ID s prefixom `custom-`) a `company-os-extra-fields` (mapa `custom-<id>` na typ `string`, `boolean`, `number`, `date` alebo `string-list`). Rozšírenia môžu pridať typ/pole, nemenia význam základných typov, povinné polia, ISO dátumy, ochranu originálov ani bezpečnostné brány. Effective validator najprv overí deklaráciu podľa balíkovej schémy, potom spojí základ s týmito rozšíreniami. Neznámy typ/pole alebo neplatná deklarácia má checkpoint; obsah sa automaticky nezmaže ani nepreklasifikuje. Základná schéma sa aktualizuje v package, rozšírenia sa zachovajú; nekompatibilná zmena vyžaduje plán a potvrdenú migráciu. Ďalšie základné systémové polia, napr. `sources`/`certainty` a uvedené deklarácie, sú výslovne súčasťou tej istej schémy.
+
 Znalostný poznatok pridáva `sources` ako zoznam existujúcich zdrojov a `certainty` ako `confirmed`, `partial` alebo `unknown`, s vysvetlením v tele. Denný filename je `YYYY-MM-DD.md`. Ľudské zobrazenie môže byť lokalizované. [Obsidian — Properties](https://obsidian.md/help/properties)
 
-Pod H1 je `> **Súvisí s:**` s relevantným nadradeným kontextom a súvisiacimi dokumentmi, najviac päť odkazov. Pri založení sa doplní príslušný index/nadradený dokument a pri sesterských pracovných dokumentoch aj spätný odkaz. Odkazy majú existovať; budúci cieľ sa označí textom, nie predstieraným funkčným linkom. Pri opakovaných názvoch `SKILL`, `index` a `postup` sa používa plná cesta od rootu. Generovaný index sa obnovuje zo svojich vstupov, neupravuje sa ručne. Ak index ešte neexistuje, založí sa najmenší potrebný podľa pravidiel oblasti. Súbory sa neprepájajú mechanicky so všetkými ostatnými.
+Pod H1 je `> **Súvisí s:**` s relevantným nadradeným kontextom a súvisiacimi dokumentmi, najviac päť odkazov. Pri založení sa doplní príslušný index/nadradený dokument a pri sesterských pracovných dokumentoch aj spätný odkaz. Odkazy majú existovať; budúci cieľ sa označí textom, nie predstieraným funkčným linkom. Pri všetkých opakovateľných názvoch (napr. SKILL, index, postup, Príprava, model.yaml, _klient a log) majú agentové/wiki odkazy plnú cestu od overeného rootu. Relatívny Markdown/HTML odkaz je prípustný v odvodenom pohľade s explicitným základom a overeným cieľom; nemožno ho vyhodnocovať podľa náhodného aktuálneho priečinka chatu. Generovaný index sa obnovuje zo svojich vstupov, neupravuje sa ručne. Ak index ešte neexistuje, založí sa najmenší potrebný podľa pravidiel oblasti. Súbory sa neprepájajú mechanicky so všetkými ostatnými.
 
 Originálne importované súbory vrátane Markdown zdrojov sa kvôli metadátam či spätným odkazom nemenia. PDF, obrázky, audio a raw podklady majú sprievodnú poznámku alebo záznam v indexe s metadátami, pôvodom a odkazmi. `SKILL.md` dodrží Agent Skills frontmatter (`name`, `description`, doplnky v `metadata`); workflow má `metadata.kind: workflow`, rolový profil `metadata.kind: role`. Poznámkové doplnky v skill metadata sú stringy podľa formátu. Procesový model, adaptéry, AGENTS/import, skripty a generované HTML používajú vlastnú schému a explicitné cesty/manifest, nie vynútený poznámkový YAML. Generované pracovné Markdown pohľady používajú poznámkovú schému odvodenú z modelu/profilu. Každý formát má určenú kanoniku a navigovateľné väzby.
 
@@ -410,7 +498,7 @@ Jeden pracovný objekt má jedného aktívneho zapisovateľa, agentové zápisy 
 
 ### Vyvolávanie a platformové cesty
 
-| Povrch | Kontrakt v1.3 |
+| Povrch | Kontrakt v1.6 |
 |---|---|
 | Desktopový Codex | Cieľ je vybrať skill cez `@` s ľudským `display_name`, ak to workshopová verzia ponúka. Konkrétny selector zostáva UNKNOWN do UI testu. Existencia custom agent TOML tento UX dôkaz nedáva. |
 | Codex CLI / IDE | Skill cez `$<id>` alebo `/skills`; discovery wrapper `.agents/skills/<id>/SKILL.md`. |
@@ -425,7 +513,11 @@ Podporovaný predvolený štart session je koreň OS otvorený ako projekt. Code
 
 Adaptéry sú bežné súbory bez povinných symlinkov, projektový scope je default. Discovery/generovanie adaptérov musí počítať s chránenými adresármi podľa §13 aj pri pridaní ďalšieho zamestnanca. Zmeny alebo prvé vytvorenie adresárov môžu vyžadovať novú session podľa klienta; verify to preverí. Interné workflowy sa nevystavujú ako ďalší zamestnanci. Model/reasoning sa dedí od používateľa, bez pevného model aliasu v starteri.
 
-Read-only preflight porovná dostupné osobné/globálne/project ID, najmä `~/.claude/skills/` a `~/.agents/skills/`, vrátane dostupných enterprise vrstiev. Nedostupnú vrstvu označí UNKNOWN. Rovnaké meno môže vyvolať inú kanoniku; verify preto zaznamená skutočný projektový wrapper, root, verziu a cieľový profil, nie iba názov v menu. Kolízia má vysvetlenie a konkrétne riešenie/fallback, osobné skills sa automaticky nemažú ani nemenia. [Claude — Name precedence](https://code.claude.com/docs/en/skills#resolve-skills-that-share-a-name)
+Read-only preflight porovná dostupné osobné/globálne/project ID, najmä `~/.claude/skills/` a `~/.agents/skills/`, a všetky relevantné nadradené `.claude/skills/`/`.agents/skills/` na skutočnej discovery ceste klienta, vrátane dostupných enterprise vrstiev. Nedostupnú vrstvu označí UNKNOWN. Rozsah klientovej discovery je verzovaný údaj, nie domnienka z existencie adresára.
+
+**Dôkaz vyvolania:** generated wrapper nesie verejnú technickú značku s verziou balíka, `workspace_id`, stabilným role ID, explicitným cieľovým profilom a jeho build hashom. Pri explicitnej skúške v novej session agent vráti túto identitu a načítaný profil; tester zaznamená použitý natívny príkaz/výber a UI/klientský výsledok, prípadne zdrojový trace, ak ho klient poskytuje. Porovná ju s aktuálnym manifestom a malým overovacím zadaním z profilu. Source verify overí súbory/hashe, samo nevidí reálne vyvolaný skill. Samotné menu meno alebo opísaná značka z disku nenahrádzajú runtime dôkaz; pri nedostatočnom dôkaze zostáva vyvolanie UNKNOWN.
+
+**Kolízia osobného ID:** `/oliver` alebo rovnaký natívny selector sa neoznačí za správny, kým neprejde skúškou. Default recovery bez zmeny cudzieho configu je prirodzené zadanie s explicitným overeným rootom → indexom tímu → kanonickým profilom; výsledok sa vykáže ako tento fallback, nie natívne vyvolanie. Používateľ môže osobný skill vedome premenovať/vypnúť a zopakovať test; agent ho automaticky nemení. [Claude — Name precedence](https://code.claude.com/docs/en/skills#resolve-skills-that-share-a-name)
 
 Pri Claude štarte v podpriečinku môže import rootového AGENTS viesť mimo pracovného priečinka a vyžiadať súhlas. Recovery vysvetlí, že zamietnutý import môže zostať vypnutý bez opakovaného dialógu; návrat do rootu a nové načítanie sa musia overiť, cudzia konfigurácia sa neprepisuje. [Claude — Imports](https://code.claude.com/docs/en/memory)
 
@@ -439,13 +531,19 @@ Používateľ má nainštalovaný podporovaný lokálny AI klient, funkčnú aut
 
 Používateľ v UI vyberie alebo vytvorí cieľový priečinok a otvorí ho ako projekt; pri cloudovom priečinku nastaví lokálnu/offline dostupnosť. Návod ukáže potrebné kroky a typické systémové výzvy na prístup k priečinku. Keď agent dokáže priečinok bezpečne vytvoriť v už povolenom rozsahu, môže to vykonať; potvrdený root vždy zostáva známy obom. Terminálové príkazy píše/vykonáva agent, účastník sa ich nemusí učiť.
 
+### Fáza 0 — dôveryhodný pokyn a staging
+
+Pred nasledovaním INSTALL agent použije iba dôveryhodný pokyn organizátora podľa Koreňa dôvery nižšie: konkrétne URL/verziu/commit a pin manifestu. Natívnym nástrojom OS stiahne manifest ako dáta, overí jeho presné bajty voči pinu, potom stiahne a overí balíkový archív podľa manifestu. Bez Node/Gitu/script modulu. Overený archív najprv skontroluje na bezpečné relatívne cesty a neželané odkazy a rozbalí do nového lokálneho stagingu mimo sync (`~/Library/Caches/company-os/bootstrap/<id>/` alebo `%LOCALAPPDATA%\company-os\bootstrap\<id>\`), s overenými oprávneniami. Žiadny apply do cieľového workspace v tejto fáze.
+
+INSTALL a bootstrap sa čítajú/nasledujú iba z tohto overeného archívu. Online README/INSTALL možno čítať ako dokumentáciu, nie použiť na zmenu dôveryhodného pinu alebo ako vykonávacie pokyny pred overením. Chýbajúci pin, nástroj, bezpečné rozbalenie alebo povolenie má konkrétny checkpoint. Táto fáza je kontrakt budúceho setupu, nie už existujúci bootstrap.
+
 ### Používateľská cesta cez chat
 
 1. Používateľ poskytne odkaz a cieľ/firmu; chýbajúce údaje doplní v chate alebo UI. Agent overí skutočný root a aktuálny režim oprávnení.
-2. Setup načíta `INSTALL.md` a presnú verziu release/manifestu. Výber verzie nie je tiché použitie pohyblivého latest/main. Agent identifikuje OS, architektúru, dostupné download/extract nástroje a Node.
+2. Agent identifikuje OS/architektúru a dostupné natívne nástroje na download/hash/extract, vykoná Fázu 0 a až potom načíta `INSTALL.md` z overeného stagingu. Release/verzia/manifest sú pinnuté, bez tichého latest/main. Podľa overeného INSTALL preverí alebo pripraví Node.
 3. Read-only preflight: prístup/cesta/dĺžka/kolízie/symlinky, lokálna dostupnosť a sync, existujúce dáta/konfigurácie/nadradené pokyny, kolízie osobných/globálnych skill ID, trust stav projektu v Codexe, autentifikácia a limity, runtime, miesto, sieť a plán zápisov. Pri neznámom bode pravdivý checkpoint; existujúca konfigurácia sa neprepisuje.
 4. Agent predloží krátky plán konkrétnych súborov, sťahovania, runtime a checkpointov. Používateľ už povolený rozsah neopakuje pri každom kroku; technické schválenia klienta/OS sú samostatné a agent ich vysvetlí.
-5. Agent v rámci oprávnení stiahne/verifikuje artefakty, pripraví runtime a deterministicky vytvorí systém/Olivera/adaptéry/ukážkový manuál. Apply kroky majú presný rozsah a obnoviteľnosť.
+5. Agent v rámci oprávnení overí runtime artefakt podľa už overeného manifestu, pripraví runtime a z overeného stagingu deterministicky vytvorí systém/Olivera, tri štartovacie modely a ich workflowy, texty/mapy, adaptéry a celý úvodný HTML manuál. Verify skontroluje počiatočný obsah aj väzby; samotný generátor bez obsahu nie je úspešný setup. Apply kroky majú presný rozsah a obnoviteľnosť.
 6. Apply uloží verziu a manifest vlastníctva v `.os-starter/`; prevádzkový verify a checkpointy konkrétneho zariadenia sú v jeho lokálnej evidencii mimo sync. Verify číta manifest, overí súbory, odkazy, generovanie a manuál; onboarding pokračuje podľa §5.
 7. Nová session spustená z koreňa reálne načíta pokyny/profil, vyvolá Olivera a spracuje skúšobný vstup. Záver oddelí vykonané/overené, otvorené a recovery; samotné stiahnutie/binárka nie sú PASS.
 
@@ -463,15 +561,17 @@ Generátor zoskupí súvisiace povolené zápisy do jedného kontrolovateľného
 
 Pri tvorbe releasu správca overí podpis oficiálneho Node SHASUMS dôveryhodnými release kľúčmi, priradenie verzie/OS/arch a presné artefakty; dôkaz uloží k releasu. Účastník nepotrebuje gpg: overuje pinnuté hashe dostupnými OS nástrojmi. Ak agent dokáže iba prečítať GitHub link, ale nemá dôveryhodný pin, môže posúdiť dokumentáciu; inštalačný kód nevykoná. Konkrétne piny a podpisové nástroje sú úloha prípravy releasu. [Node — Verifying binaries](https://github.com/nodejs/node#verifying-binaries)
 
-**Git nie je prerekvizita inštalácie účastníka.** Balík sa distribuuje ako verziovaný release archív plus manifest/SHA-256. Malý ASCII bootstrap pre sh a PowerShell používa overené dostupné natívne HTTP/extract nástroje (napr. curl/tar alebo PowerShell/Expand-Archive); ich prítomnosť sa testuje. Nemá závisieť od Node, ktorý ešte len pripravuje. Názvy/cesty používateľa sa prenášajú ako dáta, nie vkladaný shellový kód.
+**Git nie je prerekvizita inštalácie účastníka.** Balík sa distribuuje ako verziovaný release archív plus manifest/SHA-256. Fáza 0 používa overené dostupné natívne HTTP/hash/extract nástroje. Na Macu sa v čistom prostredí overí curl/tar a SHA-256 cesta shasum alebo openssl; default Windows cesta je uvedená nižšie. Ich prítomnosť a skutočný shell klienta sa testujú. Nemá závisieť od Node, ktorý ešte len pripravuje. Názvy/cesty používateľa sa prenášajú ako dáta, nie vkladaný shellový kód.
 
-**Windows bootstrap:** predvolená cesta je sekvencia jednotlivých agentom vykonaných PowerShell príkazov z overeného INSTALL; nevyžaduje spustenie `.ps1` súboru. Agent číta efektívne politiky aj Group Policy. Trvalé zmeny CurrentUser/LocalMachine ani automatický Bypass nie sú súčasťou inštalácie. Alternatívna procesová politika pre overený skript je iba explicitná používateľom schválená možnosť, ak ju spravované pravidlá povoľujú; GPO obmedzenie má checkpoint/odbornú pomoc. Účastník príkazy ručne nezadáva. [Microsoft — Execution policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies)
+**Windows bootstrap:** Fáza 0 používa explicitné natívne `curl.exe`, `tar.exe` a `certutil.exe -hashfile <súbor> SHA256`; ich dostupnosť, rozbalenie deklarovaného formátu a vyhodnotenie digestu sa overia v skutočnom shell nástroji klienta. Cesty s medzerami/diakritikou idú ako argumenty/dáta, výstup hash nástroja sa nevyhodnocuje podľa lokalizovaného banneru. Chýbajúca binárka alebo managed zákaz má checkpoint, nie automatický alias či Bypass. `Expand-Archive`, `Get-FileHash` a ďalšie module cmdlety nie sú defaultom predprípravy pri Restricted; alternatíva je prípustná až po doloženom teste konkrétneho prostredia. Restricted blokuje aj `.psm1`, jednotlivý príkaz preto nie je univerzálnym dôkazom dostupnosti modulu. [Microsoft — curl](https://learn.microsoft.com/en-us/windows/curl/), [tar](https://learn.microsoft.com/en-us/windows/tar/), [certutil hashfile](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil#-hashfile)
+
+Po Fáze 0 predvolená cesta nasleduje overený INSTALL sekvenciou jednotlivých agentom vykonaných príkazov; nevyžaduje spustenie `.ps1` súboru. Agent číta efektívne politiky aj Group Policy. Trvalé zmeny CurrentUser/LocalMachine ani automatický Bypass nie sú súčasťou inštalácie. Alternatívna procesová politika pre overený skript je iba explicitná používateľom schválená možnosť, ak ju spravované pravidlá povoľujú; GPO obmedzenie má checkpoint/odbornú pomoc. Účastník príkazy ručne nezadáva. [Microsoft — Execution policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies)
 
 **Inštalátor aj generátory sa píšu v JavaScripte a spúšťajú cez Node.js.** Python/Ruby nie sú prerekvizity. Použiť vhodný existujúci Node v overenom kompatibilnom rozsahu, alebo získať presne pinnutý oficiálny Node LTS artefakt pre OS/architektúru. Výber konkrétnej LTS verzie/rozsahu a architektúr sa uzavrie cez testy pred buildom inštalátora. Sťahovať cez HTTPS z evidovaného pôvodu, overiť presné bajty voči pinnutému checksumu/overenému oficiálnemu SHASUMS; samotný hash stiahnutý z neovereného pôvodu nedokazuje pravosť.
 
 Portable runtime je mimo synchronizovaných firemných dokumentov a bez admin zásahu či zmeny systémového PATH. Navrhnuté lokálne miesta: macOS `~/Library/Caches/company-os/runtime/<verzia>/<arch>/`, Windows `%LOCALAPPDATA%\company-os\runtime\<verzia>\<arch>\`; konkrétny zápis má vlastný rozsah oprávnení a test. Agent volá overenú binárku explicitne. Chýbajúci/odstránený cache sa bezpečne pripraví znovu. Per-device runtime cesta neprepíše spoločný sync config; na inom zariadení sa discovery vykoná znova.
 
-Runtime cache a trvalá per-device evidencia sú odlíšené: macOS evidencia `~/Library/Application Support/company-os/`, Windows `%LOCALAPPDATA%\company-os\state\`. Verify/recovery journal, trust stav, potvrdenia sync a absolútna cesta runtime patria sem, oddelené podľa identity workspace. Zdieľaný manifest drží stabilné `workspace_id` vytvorené pri prvom apply, nie identifikátor zariadenia. Verify nemení manifest; apply/update ho menia len podľa systémového kontraktu. Strata cache nevymaže recovery journal; strata lokálnej evidencie vyžaduje nový preflight, nie predpoklad hotového overenia.
+Runtime cache a trvalá per-device evidencia sú odlíšené: macOS evidencia `~/Library/Application Support/company-os/`, Windows `%LOCALAPPDATA%\company-os\state\`. Verify/recovery journal, trust stav, potvrdenia sync a absolútna cesta runtime patria sem, oddelené kompozitným kľúčom `workspace_id` + kanonická absolútna cesta skutočného rootu na danom zariadení. Kľúč vzniká až po overení existujúceho koreňa; jeho disková reprezentácia môže byť hash dvojice, oba pôvodné údaje zostávajú v evidencii. Kópia/presun alebo nezhoda cesty má nový preflight a nové potvrdenie trust/sync, nezdedí ich iba podľa rovnakého ID. Existujúce mená sa kvôli tomu nenormalizujú a obsah workspace sa automaticky nepremenúva. Zdieľaný manifest drží stabilné `workspace_id` vytvorené pri prvom apply, nie identifikátor zariadenia. Verify nemení manifest; apply/update ho menia len podľa systémového kontraktu. Strata cache nevymaže recovery journal; strata lokálnej evidencie vyžaduje nový preflight, nie predpoklad hotového overenia.
 
 Mermaid/YAML/Markdown závislosti a čítacie assets sú pribalené/verziované, bez CDN alebo povinného npm install pri bežnom generovaní. Bundled runtime klienta možno použiť iba pri jeho overenej dostupnosti/kompatibilite; nesľubovať Codex cestu Claude používateľovi. Pri nedostupnej sieti/artefakte alebo zamietnutom zápise uložiť checkpoint, nie simulovať úspech.
 
@@ -480,13 +580,19 @@ Mermaid/YAML/Markdown závislosti a čítacie assets sú pribalené/verziované,
 | Trieda | Význam | Príklady | Aktualizácia |
 |---|---|---|---|
 | `package` | Balík vlastní systémový obsah | AGENTS, import CLAUDE, generátory, default systémové návody | Nahradiť len vlastnený nezmenený súbor po pláne; pri lokálnej zmene diff/rozhodnutie. |
-| `generated` | Odvodené z aktuálnej kanoniky | Adaptéry, index tímu, text/mapy/HTML | Regenerovať z profilu/modelu; odstrániť len preukázateľne vlastnený zastaraný výstup. |
-| `seeded` | Balík založí prvú verziu, potom ju vlastní používateľ | Oliver, Mapa systému, pracovná tabuľa, firma/O mne | Druhý setup ponechá; update iba diff a konkrétne potvrdenie migrácie. |
+| `generated` | Odvodené z aktuálnej kanoniky | Adaptéry, index tímu, text/mapy/HTML a modelové workflow SKILL pohľady | Regenerovať z profilu/modelu; odstrániť len preukázateľne vlastnený zastaraný výstup. |
+| `seeded` | Balík založí prvú verziu, potom ju vlastní používateľ | Oliver, tri štartovacie modely, Mapa systému, pracovná tabuľa, firma/O mne | Druhý setup ponechá; update iba diff a konkrétne potvrdenie migrácie. |
 | `user` | Skutočné podklady a práca používateľa | Denné zápisky, zdroje, vlastné profily/modely a výstupy | Žiadny automatický reset/update/mazanie. Povolená bežná práca agenta podľa zadania zostáva možná. |
 
 Manifest eviduje `workspace_id`, jednu `installed_version`, cestu, triedu, verziu schémy, presný posledný vlastnený byte hash a odvodené vstupy. Per-device checkpointy a verify stav nie sú súčasťou zdieľaného manifestu. Seeded súbor sa po vytvorení nezmení na package len preto, že má starý template marker. `Mapa systému.md` môže mať balíkovú počiatočnú štruktúru, no ďalšiu úpravu vlastní firma. Vlastné pravidlá patria tam; ak používateľ zmení AGENTS priamo, update ich tiež zachová a ukáže konflikt.
 
-Rovnaký setup nevytvorí duplicity, nezruší checkboxy a nezopakuje hotový onboarding. Pri update uviesť pin/changelog/diff a pred prepisom overenú zálohu. Automatický downgrade sa nevykoná; zámerný rollback použije preverený recovery plán. Migrácie schémy vo v1 len podľa konkrétneho plánu a potvrdenia, bez skrytého hromadného prepisu. Update pripraví celý release v stagingu, vypočíta plán, preverí odkazy seeded profilov na package workflowy a vyrieši všetky konflikty pred apply. Pri nevyriešenom konflikte aktívne súbory a installed_version zostávajú na predchádzajúcej verzii. Apply má zálohu a lokálny journal poradia zmien; installed_version sa zmení až po overení všetkých výstupov. Ak zápis/verify zlyhá uprostred, journal označí nedokončený update, bežná systémová práca sa zastaví a recovery obnoví predchádzajúce vlastnené súbory alebo dokončí potvrdený plán. Overenie neoznačí zmiešaný stav ako platnú starú/novú verziu. Nejde o záruku atomickej výmeny viacerých súborov; sync režim vyžaduje jedného zapisovateľa a dokončenie/obnovu pred prechodom zariadenia. Odstránenie alebo odinštalovanie sa týka iba známeho vlastneného systému; súkromné údaje sa nevymažú.
+Rovnaký setup nevytvorí duplicity, nezruší checkboxy a nezopakuje hotový onboarding. Pri update uviesť pin/changelog/diff a pred prepisom overenú zálohu. Automatický downgrade sa nevykoná; zámerný rollback použije preverený recovery plán. Migrácie schémy vo v1 len podľa konkrétneho plánu a potvrdenia, bez skrytého hromadného prepisu. Update pripraví celý release v stagingu, vypočíta plán, preverí odkazy seeded profilov na package workflowy a vyrieši všetky konflikty pred apply. Pri nevyriešenom konflikte aktívne súbory a installed_version zostávajú na predchádzajúcej verzii.
+
+Pred prvým aktívnym prepisom apply pripraví overenú zálohu dotknutých súborov v súkromnom workspace `.os-starter/recovery/<transaction-id>/` s relatívnym inventárom a presnými hashmi; publikovaný release tieto používateľské zálohy neobsahuje. Do `.os-starter/update.json` uloží zdieľaný transakčný záznam (`transaction_id`, stav `pending`, baseline/target verzie a manifestové hashe, plán a referencia na zálohu). Zápis vykonáva iba aktívny apply/recovery. Lokálny journal v per-device evidencii dopĺňa poradie skutočne vykonaných zmien; nemení tým autoritu zdieľaného záznamu.
+
+installed_version sa zmení až po overení všetkých výstupov; posledný transakčný záznam sa označí `committed` a zachová pre diagnostiku. Zlyhanie ponechá `pending`/`recovery-needed`. Ak zápis/verify zlyhá uprostred, journal označí nedokončený update, bežná systémová práca sa zastaví a recovery obnoví predchádzajúce vlastnené súbory alebo dokončí potvrdený plán. Overenie neoznačí zmiešaný stav ako platnú starú/novú verziu.
+
+Zariadenie bez pôvodného lokálneho journalu tiež číta zdieľaný transakčný záznam. Pending/recovery-needed blokuje bežné systémové mutácie; recovery overí inventár a hash každej potrebnej zálohy a použije potvrdený plán, prípadne pokračuje na pôvodnom zariadení. Nedostupná/nesynchronizovaná záloha sa nevymýšľa. Rozpor verzie, manifestu a package/generated výstupov má checkpoint zmiešaného stavu, neoznačí sa automaticky za používateľskú úpravu. Samotný marker negarantuje poradie cloudového prenosu ani vzdialenú aktuálnosť; aj committed stav potrebuje lokálnu konzistenciu a pri prechode potvrdený sync podľa §12. Nejde o záruku atomickej výmeny viacerých súborov; sync režim vyžaduje jedného zapisovateľa a dokončenie/obnovu pred prechodom zariadenia. Odstránenie alebo odinštalovanie sa týka iba známeho vlastneného systému; súkromné údaje sa nevymažú.
 
 Súkromný workspace nemá automatický public remote/push. Git nie je default; voliteľná súkromná história nesmie byť prerekvizitou workshopu.
 
@@ -510,28 +616,29 @@ Pred verejným prenosom overiť vlastnú licenciu a redistribučné podmienky bu
 
 ## 16. Akceptačné kritériá a dôkazy
 
-Tieto testy sú požadovaným budúcim dôkazom; táto dokumentová revízia ich neoznačuje ako vykonané.
+Tieto kritériá sú požadovaným dôkazom celého systému. Typy: **S** = source/unit/readback, **U** = skutočný UI/klientský discovery alebo reader test, **P** = čistý platformový/používateľský pilot. Jeden typ ani komponentový PASS nenahrádzajú ostatné; report označí každý vykonaný rozsah samostatne. Táto dokumentová revízia nevykazuje celý systém ako overený.
 
-| ID | Scenár | PASS znamená |
-|---|---|---|
-| AC-01 | Nová inštalácia cez chat | Netechnický účastník dokončí cez chat/UI bez vlastných terminálových príkazov a povinného Gitu; uložený manifest zodpovedá skutočným súborom. |
-| AC-02 | OS a AI klienti | Praktický flow macOS+Codex, macOS+Claude Code, Windows+Codex, Windows+Claude Code; fresh načítanie z koreňa. Podpriečinok bez Gitu je osobitný výsledok. Claude externý import má zachytený súhlas aj zamietnutie/recovery; po návrate do rootu sa načítanie overí. |
-| AC-03 | Úložiská a presun | Deklarované lokálne/cloudové kombinácie, medzery/diakritika a presun rootu fungujú. Neoverená kombinácia je UNKNOWN, Mac-only výsledok ju nezastrešuje. |
-| AC-04 | Opakovaný setup | Žiadne duplicity, reset onboardingu alebo zmeny seeded/user súborov; personalizácia aj checkboxy zostávajú zachované. |
-| AC-05 | Upgrade a recovery | Staging a vyriešené konflikty pred apply, zachovanie local package/seeded úprav a cudzích configov. Jedna installed_version až po verify; simulované zlyhanie uprostred má journal a obnovu, zmiešaný stav nie je PASS. Odkazy seeded profilov na package workflowy platné; bez automatického downgradu. |
-| AC-06 | Oliver a vyvolanie | Inline Oliver zachová dialóg, nový chat načíta projektovú kanoniku. Rename mení alias, nie ID/príkaz. Kolízia s osobným skillom je odhalená; verify identifikuje skutočný wrapper/root/verziu/profil. Selector má dôkaz alebo pravdivý fallback. |
-| AC-07 | Nový zamestnanec | Rolový priečinok, interný workflow, index, adaptéry a HTML majú jednu kanoniku. Workflow nie je nový zamestnanec/príkaz; výsledok sa uloží pri subjekte. Metadáta/rename/trust stav overené; subagent len s povoleným delegovaním, nedostupná discovery vrstva UNKNOWN. |
-| AC-08 | Proces a manuál | Model generuje významovo rovnaký text/mapu; invalid vetvy/owner zastavia build. Offline Chrome/Edge/Safari: text bez JS, mapa s JS. Raw HTML/script/event handler/nebezpečný URL sa nevykonajú, Mermaid strict; prázdny register/ukážka platné. |
-| AC-09 | Trvalé pokračovanie | Všetky úlohy a aktuálne otázky dokončenia na jednej tabuli so stabilnými ID; osobný/firemný profil má pripravené sekcie. Odpovede v profiloch/detaile, stav/vlastník/jediný krok na tabuli. Nový chat nadviaže; zmena textu/checkboxu v Obsidiane aj prerušený proces sú rešpektované. |
-| AC-10 | Znalostná báza | Ingest zachová presné originály, aktualizuje poznatky/index/log a príslušné prepojenia; nové pracovné poznámky majú typové metadata a relevantné existujúce odkazy. Binárne/raw zdroje majú index/sidecar bez zásahu do originálu. Query uvedie zdroje/neistotu; lint read-only odhalí duplicitu/mŕtvy odkaz. |
-| AC-11 | Denný trail | Lokálny dátum pri prvom zápise, append dvoch session, stabilné result ID a pôvodný deň pri retry bez duplicít/prepisu. Nový výsledok po polnoci ide do nového dňa. Rozhodnutie odlíšené od návrhu, summary má zdroje. |
-| AC-12 | Samostatná skúška | Dva vstupy a druhá nová konverzácia; 1–2 netechnickí piloti vedia zadať, posúdiť a nájsť výstup bez zásahu autora. |
-| AC-13 | Chýbajúci runtime/nástroj/sieť | Manifest overený voči pinu z dôveryhodného pokynu, archív/runtime voči manifestu pred vykonaním. Chýbajúci/nesprávny pin a zamenený OS/arch majú bezpečný checkpoint. Dôkaz správcu o oficiálnom Node podpise; účastník bez povinného gpg. Nedostupný nástroj/sieť nie je setup PASS. |
-| AC-14 | Verejný release | Žiadne súkromné údaje/cesty/konfigurácie; licencie/NOTICE pre skutočne publikovaný obsah a assets overené; súkromný workspace sa neodosiela. Dokumentácia na review je odlíšená od inštalovateľného release. |
-| AC-15 | Nadradené pokyny | Claude s nadradeným CLAUDE, Codex s override/global kontextom: preflight zistí dostupné relevantné pokyny, import/načítanie sa v fresh session preukáže; cudzia konfigurácia sa nemení a konflikt má checkpoint. |
-| AC-16 | Sync a zastaraný zápis | Systémový writer overí byte hash, bežný agent použije fresh čítanie/cielený patch alebo append/readback. Lokálna zmena, otvorený Obsidian súbor a conflict copy sa zachovajú. Definované sync signály, zmena zariadenia s UI potvrdením v lokálnej evidencii; neznáma aktuálnosť blokuje dotknutý zápis. Bez sľubu distribuovaného locku. |
-| AC-17 | Nedôveryhodný zdroj | Wiki/meeting zdroj s vloženým pokynom nemení oprávnenia/kanonické pravidlá ani nespustí externú operáciu. Podklady zostávajú zachované, nález je vysvetlený. |
-| AC-18 | UI schvaľovací flow | Skutočný UI flow a schválenia na Macu/Windowse pri setupe, novom zamestnancovi aj bežnej práci. Režim workspace-write vysvetlený, full access nevynucovaný. Windows bez trvalej zmeny execution policy; managed/GPO zamietnutie má checkpoint/recovery. |
+| ID | Scenár | PASS znamená | Dôkaz |
+|---|---|---|---|
+| AC-01 | Nová inštalácia cez chat | Netechnický účastník dokončí cez chat/UI bez vlastných terminálových príkazov a povinného Gitu; uložený manifest zodpovedá skutočným súborom. Nainštalované sú tri štartovacie modely, ich postupy/mapy/agentové workflowy a HTML manuál s Oliverom; nie iba prázdny generátor. | P |
+| AC-02 | OS a AI klienti | Praktický flow macOS+Codex, macOS+Claude Code, Windows+Codex, Windows+Claude Code; fresh načítanie z koreňa. Podpriečinok bez Gitu je osobitný výsledok: zaznamenať správanie a overiť návrat do rootu, nevyžadovať predstieraný úspech podpriečinkového štartu. Claude externý import má zachytený súhlas aj zamietnutie/recovery; po návrate do rootu sa načítanie overí. | U, P |
+| AC-03 | Úložiská a presun | Deklarované lokálne/cloudové kombinácie, medzery/diakritika a presun rootu fungujú. Neoverená kombinácia je UNKNOWN, Mac-only výsledok ju nezastrešuje. | S, P |
+| AC-04 | Opakovaný setup | Žiadne duplicity, reset onboardingu alebo zmeny seeded/user súborov; personalizácia aj checkboxy zostávajú zachované. | S, P |
+| AC-05 | Upgrade a recovery | Staging a vyriešené konflikty pred apply, zachovanie local package/seeded úprav a cudzích configov. Jedna installed_version až po verify; simulované zlyhanie uprostred má zdieľanú pending transakciu, overenú zálohu a lokálny journal; zariadenie B bez journalu rozpozná recovery, zmiešaný stav nie je PASS. Odkazy seeded profilov na package workflowy platné; bez automatického downgradu. | S, P |
+| AC-06 | Oliver a vyvolanie | Inline Oliver zachová dialóg, nový chat načíta projektovú kanoniku. Rename mení alias, nie ID/príkaz. Kolízia s osobným skillom je odhalená; source verify overí značku/hashe a U skúška zachytí skutočné vyvolanie, identitu wrappera/root/verziu/profil podľa §12. Selector má dôkaz alebo pravdivý fallback. | S, U |
+| AC-07 | Nový zamestnanec | Rolový priečinok, interný workflow, index, adaptéry a HTML majú jednu kanoniku. Workflow nie je nový zamestnanec/príkaz; výsledok sa uloží pri subjekte. Metadáta/rename/trust stav overené; subagent len s povoleným delegovaním, nedostupná discovery vrstva UNKNOWN. Pridanie odbornej roly obnoví tím a väzby v manuáli; pôvodné modely a personalizácia zostanú zachované. | S, U, P |
+| AC-08 | Proces a manuál | Model generuje významovo rovnaký text/mapu; invalid vetvy/owner zastavia build. Offline Chrome/Edge/Safari: text bez JS, mapa s JS. Raw HTML/script/event handler/nebezpečný URL sa nevykonajú, Mermaid strict; register bez vlastných procesov a fiktívna ukážka platné. V čistej inštalácii sa dajú otvoriť všetky tri štartovacie texty/mapy aj Oliverove zodpovednosti. Editácia modelu obnoví konzistentný agentový workflow a HTML; nezhoda verzie/ID blokuje označenie aktuálnosti. | S, U, P |
+| AC-09 | Trvalé pokračovanie | Všetky úlohy a aktuálne otázky dokončenia na jednej tabuli so stabilnými ID; osobný/firemný profil má pripravené sekcie. Odpovede v profiloch/detaile, stav/vlastník/jediný krok na tabuli. Nový chat nadviaže; zmena textu/checkboxu v Obsidiane aj prerušený proces sú rešpektované. Vyriešené otázky majú odkaz; chýbajúce/duplicitné ID spustí konkrétnu recovery bez tichého re-seedu. Oliver vedie reálny rozhovor podľa príslušného modelu, ukladá kontext/priority a nový chat pokračuje od uloženého kroku. | S, U, P |
+| AC-10 | Znalostná báza | Ingest zachová presné originály, aktualizuje poznatky/index/log a príslušné prepojenia; nové pracovné poznámky prejdú základnou/rozšírenou schémou, majú aspoň jeden relevantný existujúci odkaz v Súvisí s a záznam v príslušnom indexe; kontrolované odkazy majú 0 mŕtvych cieľov. Binárne/raw zdroje majú index/sidecar bez zásahu do originálu. Query uvedie zdroje/neistotu; lint read-only odhalí duplicitu/mŕtvy odkaz. | S, P |
+| AC-11 | Denný trail | Lokálny dátum pri prvom zápise, append dvoch session, stabilné result ID a pôvodný deň pri retry bez duplicít/prepisu. Nový výsledok po polnoci ide do nového dňa. Rozhodnutie odlíšené od návrhu, summary má zdroje. | S, P |
+| AC-12 | Samostatná skúška | Dva vstupy a druhá nová konverzácia; 1–2 netechnickí piloti vedia zadať, posúdiť a nájsť výstup bez zásahu autora. Účastník si vytvorí vlastného odborného zamestnanca aj jeho prvý workflow; prvý test/opravný krok a druhý vstup, potom samostatné pokračovanie z uložených dát. | P |
+| AC-13 | Chýbajúci runtime/nástroj/sieť | Manifest overený voči pinu z dôveryhodného pokynu, archív/runtime voči manifestu pred vykonaním. Chýbajúci/nesprávny pin a zamenený OS/arch majú bezpečný checkpoint. Dôkaz správcu o oficiálnom Node podpise; účastník bez povinného gpg. Nedostupný nástroj/sieť nie je setup PASS. | S, U, P |
+| AC-14 | Verejný release | Žiadne súkromné údaje/cesty/konfigurácie; licencie/NOTICE pre skutočne publikovaný obsah a assets overené; súkromný workspace sa neodosiela. Dokumentácia na review je odlíšená od inštalovateľného release. | S |
+| AC-15 | Nadradené pokyny | Claude s nadradeným CLAUDE, Codex s override/global kontextom: preflight zistí dostupné relevantné pokyny, import/načítanie sa v fresh session preukáže; cudzia konfigurácia sa nemení a konflikt má checkpoint. | S, U |
+| AC-16 | Sync a zastaraný zápis | Systémový writer overí byte hash, bežný agent použije fresh čítanie/cielený patch alebo append/readback. Zmena uložená v Obsidiane pred aktuálnym agentovým čítaním a konfliktová kópia sa zachovajú. Súbežný externý zápis počas operácie sa testuje/vykáže ako pozorované správanie s checkpointom; zachovanie neuloženého alebo súbežne prepisovaného editora sa negarantuje. Definované sync signály, zmena zariadenia s UI potvrdením v lokálnej evidencii; neznáma aktuálnosť blokuje dotknutý zápis. Bez sľubu distribuovaného locku. | S, U, P |
+| AC-17 | Nedôveryhodný zdroj | Wiki/meeting zdroj s vloženým pokynom nemení oprávnenia/kanonické pravidlá ani nespustí externú operáciu. Podklady zostávajú zachované, nález je vysvetlený. | S, P |
+| AC-18 | UI schvaľovací flow | Skutočný UI flow a schválenia na Macu/Windowse pri setupe, novom zamestnancovi aj bežnej práci. Režim workspace-write vysvetlený, full access nevynucovaný. Windows bez trvalej zmeny execution policy; managed/GPO zamietnutie má checkpoint/recovery. | U, P |
+| AC-19 | Účastnícke materiály | Po čistej plnej inštalácii zo Začnite tu otvoriteľných7promptov a3vetvy sA/B/kritériami/manuálom. Presné prompty/raw vstupy zachované; fiktívny kontext v clipboarde izolovaný od firmy. Zostavenie bez vaultu/siete, cudzí obsah zachovaný. Skutočný copy success/failure/keyboard/no-JS overený v deklarovanom HTML povrchu; Obsidian výsledok samostatne. Účastník vloží text do AI klienta, vytvorí zamestnanca/workflow a pokračuje v novom chate; source/build/pilot oddelené. | S, U, P |
 
 Test report: pin/verzia balíka, OS/architektúra, klient/verzia/režim oprávnení, typ úložiska, scenár, dátum, dôkaz, PASS/PARTIAL/FAIL/UNKNOWN a recovery. Source/unit kontrola, UI discovery a používateľský pilot sú samostatné dôkazy.
 
@@ -546,7 +653,7 @@ Pred širokým workshopovým releasom doplniť všetky štyri OS×klient základ
 
 ## 17. Otvorené technické body pre implementáciu a test
 
-V1.3 zachováva prijaté technické voľby a dopĺňa explicitné workflowy pod zamestnancami, jednu tabuľu dokončenia s otázkami a ID, šablóny profilov, metadata/prepojenia, koreň dôvery, dva kontrakty zápisu, Windows bootstrap, sync signály a obnoviteľný update. Sú to požiadavky na implementáciu a pilot, nie výsledok runtime testu.
+V1.6 zachováva Olivera, tri modelové procesy, tabuľu a obsahový modul v1.5. Zapracúva Claude M1–M10 ako dokumentové kontrakty: dôveryhodnú Fázu 0, Windows nástroje, mapu schopností, balíkovú schému, identitu rootu, spoločné recovery a merateľné dôkazy. Obsahový modul môže byť implementovaný a overený samostatne; plná inštalácia, štartovacie modely/Oliver/HTML procesný manuál a používateľský pilot vyžadujú vlastné dôkazy. AC-19 dopĺňa pôvodných18stabilných kritérií.
 
 Otvorené zostávajú:
 
@@ -555,9 +662,10 @@ Otvorené zostávajú:
 3. Reálne natívne vyvolanie/selector, načítanie pri novej session a správanie z podpriečinka bez Gitu; prípadná bezpečná per-project root konfigurácia.
 4. Doplňujúca schéma profilov/modelov nad záväzným základom §7/12, generátor indexov/adaptérov, licenčne posúdený reader/engine a overenie sanitizácie.
 5. Konkrétne cloudové sync prípady, obmedzenia cesty a súbežného editora, netechnický pilot a testovacia matica. Interný Mac dôkaz nie je dôkaz celého startera.
-6. Licencia verejného balíka, verzie/licencie/NOTICE assetov a recovery aktualizácií. Licenčná voľba sa nerobí automaticky iba preto, že repo je verejné.
+6. Licenčná voľba verejného balíka, verzie/licencie/NOTICE budúcich bundled assetov a implementácia/test recovery podľa uzavretého kontraktu §13. Licenčná voľba sa nerobí automaticky iba preto, že repo je verejné.
 
 Review má uviesť konkrétny chýbajúci kontrakt alebo najmenší test, ktorý bod uzavrie. Povinné jadro Oliver/tím/procesný generátor/slovenčina/tabuľa/denný trail zostáva; materiálny konflikt potrebuje dôkaz a najmenšiu alternatívu zachovávajúcu cieľ.
+
 
 ## 18. Zdroje, dostupnosť podkladov a stav overenia
 
@@ -573,17 +681,17 @@ Primárne zdroje načítané pri posúdení review 12.10.2026:
 
 Klientské technické údaje sú časovo citlivé; implementácia znovu preverí verzie/režimy z oficiálnych zdrojov. Konkrétna podporovaná verzia Node a pôvod artefaktu sú checkpoint, nie už vybraný release.
 
-Claude read-only review pôvodnej v1.0 bolo PARTIAL bez P0. V1.2 zapracúva potvrdené opravy a korekcie: počet schválení sa negarantuje, hash neoverí vzdialený sync, checksum zdrojov/archívov používa presné bajty. Reviewer uviedol obmedzenie nezávislosti prostredia a nedostupnosť interného kódu; nejde o runtime pilot. Nový inštalátor, Windows/cloud scenáre, native selector a účastnícky pilot sú **NOT TESTED**. Claude review v1.2 commitu 5c1e08b bolo PARTIAL bez P0; N1–N15 sú zapracované v tejto revízii, s obnoviteľným update namiesto sľubu viac-súborovej atomicity a lokálnymi device checkpointmi. Externé review v1.3 zostáva otvorené.
+Claude read-only review pôvodnej v1.0 bolo PARTIAL bez P0. V1.2 zapracúva potvrdené opravy a korekcie: počet schválení sa negarantuje, hash neoverí vzdialený sync, checksum zdrojov/archívov používa presné bajty. Reviewer uviedol obmedzenie nezávislosti prostredia a nedostupnosť interného kódu; nejde o runtime pilot. Nový inštalátor, Windows/cloud scenáre, native selector a účastnícky pilot sú **NOT TESTED**. Claude review v1.2 commitu 5c1e08b bolo PARTIAL bez P0; N1–N15 sú zapracované v tejto revízii, s obnoviteľným update namiesto sľubu viac-súborovej atomicity a lokálnymi device checkpointmi. Doručené Claude review v1.3 identifikovalo M1–M10; ich stav v aktuálnom kontrakte je v §23. Nové externé review v1.6 a runtime pilot zostávajú otvorené.
 
 
 Primárne zdroje cielene znovu čítané 13.10.2026: [Claude Tools](https://code.claude.com/docs/en/tools-reference), [Memory](https://code.claude.com/docs/en/memory), [Skills](https://code.claude.com/docs/en/skills), [Microsoft Execution policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies), [Node verifying binaries](https://github.com/nodejs/node#verifying-binaries), [Marked](https://marked.js.org/), [Mermaid securityLevel](https://mermaid.js.org/config/schema-docs/config-properties-securitylevel.html). Dokumentácia overuje vybrané kontrakty; runtime matica zostáva NOT TESTED.
 
 ## 19. Ďalší postup
 
-1. Nezávisle overiť úplnosť a konzistenciu v1.3. Review pripraví materiálne nálezy/testy, samo nemení prijaté požiadavky.
+1. Nezávisle overiť úplnosť a konzistenciu v1.6 a existujúceho obsahového modulu. Review pripraví materiálne nálezy/testy, samo nemení prijaté požiadavky.
 2. Po zadaní implementácie začať najmenším platformovým pilotom podľa §16 a uzavrieť runtime/distribúciu/UI oprávnenia.
 3. Nadviazať čistou implementáciou šablón, procesov a adaptérov; reusovať len posúdené/licenčne overené minimum.
-4. Pred workshopovým releasom doplniť AC-01–18, deklarovanú platformovú maticu, netechnický pilot a recovery.
+4. Pred workshopovým releasom doplniť AC-01–19, deklarovanú platformovú maticu, netechnický pilot a recovery.
 
 Publikácia špecifikácie nie je inštalovateľný release. V repozitári nie je samostatný review prompt; autor ho odovzdáva v chate.
 
@@ -606,3 +714,41 @@ Publikácia špecifikácie nie je inštalovateľný release. V repozitári nie j
 | N14–N15 | Zdieľaný manifest iba apply/update; per-device evidence mimo sync; dátum/ID denného bloku a retry. §10/13, AC-11/16. |
 
 Všetkých 18 AC je požadovaným budúcim dôkazom. Review a publikácia dokumentov nepotvrdzujú inštalátor ani podporu všetkých kombinácií.
+
+## 21. Zmeny vo v1.4
+
+- Tri povinné štartovacie procesy s modelom/textom/mapou: firemný základ, nový AI zamestnanec, tvorba/úprava postupu.
+- Model je kanonika krokov/otázok/kritérií; príslušné Oliverove workflowy sa generujú. Tým sa nahrádza pôvodná v1.3 autorita editovateľného onboarding workflowu.
+- Úvodný offline HTML manuál obsahuje Olivera a tri procesy už po inštalácii, s otvoriteľným textom/mapou/zodpovednosťami a obojstrannými väzbami.
+- Aktualizácia prehľadov a ownership seeded modelov/generated pohľadov; rozšírené AC bez zmeny 18 stabilných ID.
+- Workshopová cesta: kontext/priority → vlastný odborný zamestnanec → prvý workflow → dva vstupy → nový chat/uložené pokračovanie. Dokumentové zadanie nie je funkčný release.
+
+## 22. Zmeny vo v1.5
+
+- Pribalené účastnícke promptyP1–P7 a3fiktívne vetvy sA/B cez blok Začnite tu → Workshop.
+- Jedna udržiavaná obsahová kanonika, sanitizované exporty/provenance a reprodukovateľný lokálny build bez privátneho vaultu.
+- Kombinované demo-copy s viditeľným kontextom/fiktívnosťou, prístupné stavy a ručný fallback; Obsidian/HTML/pilot overované samostatne.
+- Presné pôvodné prompty/vstupy, žiadny lektorský scenár ani súkromné interné odkazy; nové AC-19.
+
+## 23. Zmeny vo v1.6 a stav Claude M1–M10
+
+Tomáš schválil zapracovanie opráv a publikáciu špecifikácie aj celého súčasného účastníckeho modulu. Nálezy pochádzajú z review publikovanej v1.3 (b1fe6a7); časť M1 už vyriešila v1.4. Tabuľka hodnotí **dokumentový kontrakt**, nie vykonaný inštalačný/runtime test.
+
+| ID | Zapracovanie / miesto | Otvorený implementačný dôkaz |
+|---|---|---|
+| M1 | Jeden model, generated workflow, prevod vlastného workflowu a stable step ID. §7–8. | Vytvoriť/upraviť proces bez druhej editovateľnej procedúry; validácia step odkazov. |
+| M2 | Fáza 0 overí manifest/archív a bezpečne rozbalí mimo sync; INSTALL až z overeného stagingu. §13. | Čistý download/hash/extract walkthrough a negatívne piny. |
+| M3 | Windows default native curl.exe/tar.exe/certutil.exe; module cmdlety iba po teste. §13. | Skutočný klientský shell, PS5.1 Restricted/pwsh a cesty s medzerami/diakritikou; bez zmeny policy. |
+| M4 | Mapa schopností→konkrétna kanonika/trieda; spoločné package postupy, schéma a firmové rozšírenia odlíšené. §2–4/11–13. | Core súbory a aktualizácia bez straty firemných rozšírení. |
+| M5 | Zdieľaná pending/recovery transakcia a hashovaná záloha, lokálny journal; marker nie je záruka cloudového poradia. §13. | Prerušený apply a recovery na B bez pôvodného journalu. |
+| M6 | Nadradené discovery vrstvy, značka wrappera a samostatný U dôkaz/fallback. §12, AC-06/15. | Native vyvolanie vs. osobná kolízia/trust stav; source verify ho nenahrádza. |
+| M7 | Uzavretý základný enum a priradenie šablón; kompatibilné deklarované rozšírenia. §12. | Efektívny validator načíta jedinú schému + deklaráciu Mapy. |
+| M8 | Jednoznačné agentové/wiki cesty pre všetky opakovateľné názvy; relatívny pohľad má známy základ. §12. | Duplicate-basename a link lint prípady. |
+| M9 | Otázky označiť vyriešené s odkazom; chýbajúce/duplicitné ID má recovery bez reseedu. §6, AC-09. | Ručné editácie/kópia/odstránenie riadku v Obsidiane a nový chat. |
+| M10 | Per-device kľúč workspace_id + kanonický root; kópia/presun má nový preflight. §13. | Dve kópie s rovnakým workspace_id na jednom zariadení. |
+
+AC-02 spresňuje návrat do rootu, AC-06/10 merateľný dôkaz a AC-16 zachovanie vopred uložených zmien bez neuskutočniteľnej garancie súbežného editora. Ku každému z 19 stabilných AC sú priradené požadované typy dôkazu S, U, P alebo ich kombinácia. Pravidlá v1.6 nerobia z 10 komponentových testov dôkaz celého inštalátora.
+
+Repozitár obsahuje sanitizované účastnícke snapshoty/provenance, export/build skripty, vlastné lokálne HTML assets, fragment Začnite tu a testy. Presné texty 7 promptov a 6 pôvodných vstupov zostávajú zachované; fiktívne demo bloky sú odvodené pohľady. [Stav modulu a limity](workshop-module-status.md), [postup zostavenia](../scripts/WORKSHOP.md). V tomto module sú iba vlastné zdroje a Node built-ins; budúce bundled Mermaid/YAML/Markdown/runtime artefakty majú samostatnú licenčnú/release bránu. Zverejnenie autorových súborov samo neudeľuje novú otvorenú licenciu; licenčná voľba zostáva explicitným krokom.
+
+Primárne Microsoft podklady k oprave Windows kontraktu znovu overené 14.10.2026: [Execution policies 5.1](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-5.1), [curl](https://learn.microsoft.com/en-us/windows/curl/), [tar](https://learn.microsoft.com/en-us/windows/tar/), [certutil](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil#-hashfile). Dokumentácia neurčuje PASS konkrétneho stroja/shellu; Windows runtime zostáva NOT TESTED.

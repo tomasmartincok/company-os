@@ -1,0 +1,29 @@
+:root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #172c35; background: #f5f7f7; line-height: 1.6; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header, main, footer { max-width: 58rem; margin: auto; padding: 1.25rem; }
+header { padding-top: 2.5rem; }
+h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.2; }
+h2 { font-size: 1.5rem; margin-top: 2rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1rem; }
+.eyebrow { color: #315a63; font-weight: 650; }
+article { margin: 1.5rem 0; padding: 1rem; background: #fff; border: 1px solid #ccd7da; border-radius: .5rem; scroll-margin-top: 1rem; }
+.demo { border-left: .35rem solid #97660d; }
+a { color: #07516a; text-underline-offset: .15em; overflow-wrap: anywhere; }
+.link-list { display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: 1rem 0; }
+.link-list a { padding: .2rem 0; }
+button { font: inherit; background: #07516a; color: white; padding: .6rem .9rem; border: 2px solid transparent; border-radius: .3rem; cursor: pointer; max-width: 100%; white-space: normal; text-align: left; }
+button:disabled { opacity: .65; cursor: wait; }
+:focus-visible { outline: 3px solid #ad5700; outline-offset: 3px; }
+pre { margin: .6rem 0; padding: 1rem; background: #eff3f4; border: 1px solid #d2dcde; border-radius: .3rem; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+code { font-size: .92rem; }
+pre code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; }
+.notice { background: #fff4d9; padding: .8rem; border-left: .3rem solid #97660d; }
+.copy-status { margin: .4rem 0; font-size: .9rem; }
+.manual-copy { width: 100%; min-height: 12rem; font: .9rem/1.5 ui-monospace, monospace; padding: .75rem; white-space: pre-wrap; overflow-wrap: anywhere; border: 2px solid #97660d; }
+[hidden] { display: none !important; }
+.skip-link { position: absolute; left: -10000px; }
+.skip-link:focus { position: fixed; left: .5rem; top: .5rem; z-index: 1; background: white; padding: .5rem; }
+footer { border-top: 1px solid #ccd7da; font-size: .9rem; }
+@media (max-width: 25rem) { header, main, footer { padding: .8rem; } article { padding: .7rem; } pre { padding: .7rem; } }

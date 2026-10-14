@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "exportRule": "workshop-participant-v1",
+  "sourceAuthority": "workshop-participant-materials",
+  "sources": [
+    {
+      "logicalSource": "pracovny-list-a-prompty.md",
+      "sourceSha256": "54be05123cbb131a9d6eab36d7295068356444b585c6fa0556d3d9aa9e3d0ff2",
+      "exportedSha256": "c3c293b5e4c6e7c7be22872943e485e6b3db19ebdeeee345354746d8fc7efd52",
+      "textBlockSha256": [
+        "3e3c3bd1903a17051ea443aaf897c2a406622ea6a7177a3612558dfd43f43d14",
+        "50907ba883a3399252ef40f74ae7ad7be3cbdee8eef577fc5c0bdec4f4694b79",
+        "0e45ee9268c515969b0ff74e226b01c11b24e8c259ce11d0ed658bc5a02f64f4",
+        "c7caa1adc571cd4e4eb4280107c7f53c533efe15c84076ee359d6e69a54a5b52",
+        "11effdfd8eaf3a6b245d1080310628117e2a115722b06b52dc386a38e5951644",
+        "d18e89d7e39cc07135f801dd7792811657179452ef1f8bb5076dfc8c4b129ba6",
+        "ff96a61a150fc588367cc31b60ec440d33d38368d591edadfd8bbe37a936abc2"
+      ]
+    },
+    {
+      "logicalSource": "ukazkove-vstupy.md",
+      "sourceSha256": "e7aab30abe5a3fb2d70a23b13f8b28ba4966d268833385b4feeee22ab497553d",
+      "exportedSha256": "4727ae57046ea6e06dad848a3af4c4e072fa990d4807dffa613af3fb68b31d4e",
+      "textBlockSha256": [
+        "de24a6cfb16ee5fa3fa54fac3ad848b6afb929a016d260a696961184907c78f9",
+        "701ed5c860832f28b58dc5ef813b48cae0118427928aa3f53d5816a42ba1e6dc",
+        "97ae55626c8bda1904d4ccc237e96e70e5e7b95ed3efbac6c62d2a85da86ea12",
+        "a5aa75ec1e5ce3dcdeb774ab252d0899dc16ec27f6345561fa921e019445bde4",
+        "57cebaa53a84caab829809fe25b31cb152615022ad112c6c87746167eac5f9d8",
+        "3f91e7b35498320063f2e46410918fe12d3a0b13c58474ec22eab83ead40f096"
+      ]
+    }
+  ]
+}
