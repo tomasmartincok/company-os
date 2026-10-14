@@ -40,7 +40,7 @@ export function sanitizeSource(bytes, filename) {
 }
 
 export function assertPublic(markdown, filename = 'content') {
-  const privateMarkers = /\[\[|\]\]|\/Users\/|\/private\/|Efforts\/|Calendar\/|lektorsk[yý]|Kontrola lektora|ERP|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i;
+  const privateMarkers = /\[\[|\]\]|\/Users\/|\/private\/|Efforts\/|Calendar\/|lektorsk[yý]|Kontrola lektora|\bERP\b|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i;
   if (privateMarkers.test(markdown)) throw new Error(`${filename}: private/internal reference in participant content`);
 }
 
@@ -73,7 +73,10 @@ export function demoPayload(branch, inputIndex) {
   const context = /### Demo kontext\r?\n\r?\n([\s\S]*?)(?=\r?\n### )/.exec(branch.body)?.[1].trimEnd();
   if (!context) throw new Error(`${branch.id}: demo context missing`);
   if (![0, 1].includes(inputIndex)) throw new Error('Demo input must be A or B');
-  return `FIKTÍVNA UKÁŽKA: osoby, firmy, termíny a situácie sú vymyslené.\nPouži nasledujúci izolovaný demo kontext iba pre túto skúšku. Neprepisuj ním Prehľad firmy.md ani O mne.md a neukladaj ho ako potvrdené údaje mojej firmy. Demo zadanie a výstupy označ ako fiktívne a ulož oddelene od reálnej práce.\n\nDemo kontext:\n${context}\n\nVstup ${inputIndex === 0 ? 'A' : 'B'}:\n${branch.blocks[inputIndex]}`;
+  if (!['marketing', 'inbox', 'stretnutie'].includes(branch.id)) throw new Error('Unknown demo branch');
+  const demoPath = `Ukážky/Workshop/${branch.id}/`;
+  const continuation = inputIndex === 1 ? `Pred spracovaním B načítaj uložené zadanie.md, vysledok-a.md a demo opravy z ${demoPath}. Ak chýbajú, označ to a nepredstieraj nadviazanie.\n` : '';
+  return `FIKTÍVNA UKÁŽKA: osoby, firmy, termíny a situácie sú vymyslené.\nPouži nasledujúci izolovaný demo kontext iba pre túto skúšku. Neprepisuj ním Prehľad firmy.md ani O mne.md a neukladaj ho ako potvrdené údaje mojej firmy.\nDemo zadanie, vstupy, výsledky a opravy označ ako fiktívne a ulož výhradne do ${demoPath}: zadanie.md, vstup-${inputIndex === 0 ? 'a' : 'b'}.md a vysledok-${inputIndex === 0 ? 'a' : 'b'}.md. Zachovaj existujúce záznamy.\n${continuation}Do skutočného profilu zamestnanca, modelu procesu ani workflowu neprenášaj fakty alebo obmedzenia tejto ukážky (napríklad demo firmu, jej lokalitu či limit slov). Tie patria iba do demo zadania. Trvalú opravu navrhni iba ako všeobecnú znovupoužiteľnú zásadu a pred uložením ju potvrď. Ak výslovne určím pravidlo ako vlastné skutočné pravidlo, over jeho rozsah a moje potvrdenie; samotné demo ho nepotvrdzuje.\n\nDemo kontext:\n${context}\n\nVstup ${inputIndex === 0 ? 'A' : 'B'}:\n${branch.blocks[inputIndex]}`;
 }
 
 export async function importSources(sourceDirectory) {

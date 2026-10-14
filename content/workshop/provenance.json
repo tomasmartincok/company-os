@@ -5,8 +5,8 @@
   "sources": [
     {
       "logicalSource": "pracovny-list-a-prompty.md",
-      "sourceSha256": "54be05123cbb131a9d6eab36d7295068356444b585c6fa0556d3d9aa9e3d0ff2",
-      "exportedSha256": "c3c293b5e4c6e7c7be22872943e485e6b3db19ebdeeee345354746d8fc7efd52",
+      "sourceSha256": "1e627747a0418ae7eb79ce2ff6ee8e6cf835f943e4666d1328e45d1f4a63b093",
+      "exportedSha256": "3c63b9197458eb77a147a71515b0c14187f5084843f284ee4cae26c1df10737c",
       "textBlockSha256": [
         "3e3c3bd1903a17051ea443aaf897c2a406622ea6a7177a3612558dfd43f43d14",
         "50907ba883a3399252ef40f74ae7ad7be3cbdee8eef577fc5c0bdec4f4694b79",
@@ -19,8 +19,8 @@
     },
     {
       "logicalSource": "ukazkove-vstupy.md",
-      "sourceSha256": "e7aab30abe5a3fb2d70a23b13f8b28ba4966d268833385b4feeee22ab497553d",
-      "exportedSha256": "4727ae57046ea6e06dad848a3af4c4e072fa990d4807dffa613af3fb68b31d4e",
+      "sourceSha256": "8727b8f2010efd6f0ec248fd2e14f8a23a7d90c91b6904651011723342286e7e",
+      "exportedSha256": "d8ea91e6907fc0333cd62ef6046487e7308c01fb25428c0a026015d106291f9b",
       "textBlockSha256": [
         "de24a6cfb16ee5fa3fa54fac3ad848b6afb929a016d260a696961184907c78f9",
         "701ed5c860832f28b58dc5ef813b48cae0118427928aa3f53d5816a42ba1e6dc",

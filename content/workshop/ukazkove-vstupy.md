@@ -30,7 +30,7 @@ Overené podklady pre tento fiktívny príklad: pri návrhu sa pýtame, koľko v
 
 ### Demo kontext
 
-Fiktívny prevádzkovateľ Ateliéru Lipa plánuje týždeň19.–23.10.2026. Aktuálna priorita je dokončiť návrh pre klienta do 21.10. a nezmeškať potvrdenie dodávky. Hodnotiaci čas:19.10.2026, 9:00 Europe/Bratislava. Správy sú iba textové ukážky. Úloha: navrhnúť najviac tri maily vyžadujúce pozornosť a ostatné stručne zoskupiť. Každý výber musí mať dôvod, termín a ďalší krok. Zákaz odoslania, archivovania alebo zmien inboxu.
+Fiktívny prevádzkovateľ Ateliéru Lipa plánuje týždeň 19.–23.10.2026. Aktuálna priorita je dokončiť návrh pre klienta do 21.10. a nezmeškať potvrdenie dodávky. Hodnotiaci čas: 19.10.2026, 9:00 Europe/Bratislava. Správy sú iba textové ukážky. Úloha: navrhnúť najviac tri maily vyžadujúce pozornosť a ostatné stručne zoskupiť. Každý výber musí mať dôvod, termín a ďalší krok. Zákaz odoslania, archivovania alebo zmien inboxu.
 
 ### Vstup A
 

@@ -4,7 +4,8 @@ import { mkdtemp, readFile, readdir, mkdir, writeFile, rm, symlink } from 'node:
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { runInNewContext } from 'node:vm';
-import { loadSnapshots, importSources, textBlocks, sanitizeSource, demoPayload, writeFreshDirectory, sha256, repositoryRoot, workshopFiles } from '../scripts/workshop-content.mjs';
+import { execFileSync } from 'node:child_process';
+import { loadSnapshots, importSources, textBlocks, sanitizeSource, demoPayload, writeFreshDirectory, sha256, repositoryRoot, workshopFiles, assertPublic } from '../scripts/workshop-content.mjs';
 import { buildArtifacts, renderMarkdown } from '../scripts/build-workshop.mjs';
 
 const decodeHtml = value => value.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
@@ -63,7 +64,7 @@ test('Fresh build is deterministic, relative links exist and output contains no 
   const first = await buildArtifacts(content);
   const second = await buildArtifacts(content);
   assert.deepEqual(first, second);
-  for (const [filename, bytes] of Object.entries(first)) assert.doesNotMatch(bytes, /\/Users\/|\/private\/|Efforts\/|\[\[|Kontrola lektora|lektorsk[yý]|ERP|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i, filename);
+  for (const [filename, bytes] of Object.entries(first)) assert.doesNotMatch(bytes, /\/Users\/|\/private\/|Efforts\/|\[\[|Kontrola lektora|lektorsk[yý]|\bERP\b|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i, filename);
   const html = first['Workshop/index.html'];
   for (const [, href] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (href.startsWith('#')) assert.ok(html.includes(`id="${href.slice(1)}"`), href);
@@ -153,4 +154,91 @@ test('Copy permission failure or unavailable clipboard selects exact text and ne
     assert.doesNotMatch(harness.status.textContent, /Skopírované/);
     assert.equal(harness.button.disabled, false);
   }
+});
+
+
+test('Demo routes stay within their own branch and B explicitly reloads A without leaking demo facts into real rules', () => {
+  for (const branch of content.branches) {
+    for (const inputIndex of [0, 1]) {
+      const payload = demoPayload(branch, inputIndex);
+      assert.match(payload, new RegExp(`Ukážky/Workshop/${branch.id}/`));
+      for (const other of content.branches.filter(item => item.id !== branch.id)) assert.ok(!payload.includes(`Ukážky/Workshop/${other.id}/`));
+      assert.match(payload, /Do skutočného profilu zamestnanca, modelu procesu ani workflowu neprenášaj fakty alebo obmedzenia/);
+      assert.match(payload, /Trvalú opravu navrhni iba ako všeobecnú znovupoužiteľnú zásadu/);
+      assert.match(payload, /Ak výslovne určím pravidlo ako vlastné skutočné pravidlo/);
+      assert.ok(payload.endsWith(branch.blocks[inputIndex]));
+      if (inputIndex === 1) assert.ok(payload.includes(`načítaj uložené zadanie.md, vysledok-a.md a demo opravy z Ukážky/Workshop/${branch.id}/`));
+    }
+  }
+  assert.throws(() => demoPayload({ ...content.branches[0], id: '../../real' }, 0), /Unknown demo branch/);
+});
+
+test('Public filter accepts interpretácia but rejects an ERP token and private markers', () => {
+  assert.doesNotThrow(() => assertPublic('Interpretácia výsledku a interpretácia vstupu.'));
+  for (const value of ['ERP', 'údaje ERP systému', '(erp)', '[[súkromný odkaz]]', '/Users/private/file.md']) assert.throws(() => assertPublic(value), /private\/internal/);
+});
+
+test('Choice appears before P1, generic P2/P3 follow the branch and participant screens hide core integration markers', async () => {
+  const files = await buildArtifacts(content);
+  const fragment = files['Začnite tu.fragment.md'];
+  const html = files['Workshop/index.html'];
+  for (const text of [fragment, html, content.documents[workshopFiles[0]]]) {
+    assert.match(text, /Pred P1 si vyberte/);
+    assert.match(text, /marketing, inbox či stretnutie/);
+    assert.match(text, /v P2 vytvorte zamestnanca/);
+    assert.match(text, /v P3 jeho zodpovedajúci všeobecný postup/);
+    assert.match(text, /Bez Obsidianu otvorte svoj pracovný priečinok/);
+    assert.match(text, /Workshop\/index\.html/);
+  }
+  assert.ok(html.indexOf('Pred P1 si vyberte') < html.indexOf('<article id="p1">'));
+  assert.ok(content.documents[workshopFiles[0]].indexOf('Pred P1 si vyberte') < content.documents[workshopFiles[0]].indexOf('## P1:'));
+  assert.equal(fragment.match(/<!-- company-os:workshop-manual-link:markdown -->/g)?.length, 1);
+  assert.equal(html.match(/<!-- company-os:workshop-manual-link:html -->/g)?.length, 1);
+  assert.doesNotMatch(fragment.replace(/<!--[\s\S]*?-->/g, ''), /Väzba na manuál|Samostatný obsahový modul|Integrácia doplní|Manuál\/index\.html/);
+  assert.doesNotMatch(html.replace(/<!--[\s\S]*?-->/g, ''), /samostatný modul|kanonických podkladov|obnovujú sa exportom|Manuál\/index\.html/);
+  for (const filename of workshopFiles) {
+    assert.ok(files[`Workshop/${filename}`].includes('provenance v ../workshop-component-manifest.json'));
+    assert.ok(Object.hasOwn(files, 'workshop-component-manifest.json'));
+  }
+  for (const id of ['p5', 'p7']) assert.match(content.prompts.find(prompt => prompt.id === id).body, /\*\*Overte:\*\*/);
+});
+
+test('An isolated autocrlf=true Git checkout keeps component bytes LF and builds with the same hashes', async () => {
+  const temp = await mkdtemp(join(tmpdir(), 'company-os-workshop-autocrlf-'));
+  const checkout = join(temp, 'checkout');
+  await mkdir(checkout);
+  const git = args => execFileSync('git', ['-C', checkout, ...args], { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+  const paths = [];
+  async function collect(relativePath) {
+    const full = join(repositoryRoot, relativePath);
+    // readdir distinguishes these explicit source directories without inspecting .git/user outputs.
+    if (relativePath === 'scripts' || relativePath === 'content/workshop' || relativePath === 'scripts/workshop-assets') {
+      for (const entry of await readdir(full, { withFileTypes: true })) {
+        if (entry.isDirectory()) await collect(`${relativePath}/${entry.name}`);
+        else paths.push(`${relativePath}/${entry.name}`);
+      }
+    } else paths.push(relativePath);
+  }
+  try {
+    git(['init', '--quiet']);
+    git(['config', 'core.autocrlf', 'true']);
+    git(['config', 'core.eol', 'crlf']);
+    for (const root of ['.gitattributes', 'scripts', 'content/workshop', 'templates/zacnite-tu-workshop.md']) await collect(root);
+    for (const path of paths) {
+      const bytes = await readFile(join(repositoryRoot, path));
+      const hash = execFileSync('git', ['-C', checkout, 'hash-object', '-w', '--stdin'], { input: bytes, encoding: 'utf8' }).trim();
+      git(['update-index', '--add', '--cacheinfo', `100644,${hash},${path}`]);
+    }
+    git(['checkout-index', '--all']);
+    assert.equal(git(['config', 'core.autocrlf']).trim(), 'true');
+    for (const path of paths) {
+      const checkedOut = await readFile(join(checkout, path));
+      assert.equal(checkedOut.includes(13), false, `${path}: unexpected CR byte`);
+      assert.deepEqual(checkedOut, await readFile(join(repositoryRoot, path)), path);
+    }
+    const output = join(temp, 'fresh-build');
+    execFileSync(process.execPath, ['scripts/build-workshop.mjs', output], { cwd: checkout, encoding: 'utf8' });
+    const expected = await buildArtifacts(content);
+    for (const [path, bytes] of Object.entries(expected)) assert.equal(await readFile(join(output, path), 'utf8'), bytes, path);
+  } finally { await rm(temp, { recursive: true, force: true }); }
 });

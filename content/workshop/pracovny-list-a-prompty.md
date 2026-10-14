@@ -1,6 +1,12 @@
 # Pracovný list a prompty pre účastníkov
 
-**Návrh na skúšku.** Pracujte vo svojom nainštalovanom pracovnom priečinku. Najprv dokončite overený inštalačný návod. Prompty nižšie nenahrádzajú inštaláciu ani pripojenie mailu. V hranatých zátvorkách doplňte vlastný údaj.
+**Pred prvým krokom.** Pracujte vo svojom nainštalovanom pracovnom priečinku. Najprv dokončite inštaláciu podľa overeného návodu. Prompty nižšie nenahrádzajú inštaláciu ani pripojenie mailu. V hranatých zátvorkách doplňte vlastný údaj.
+
+**Pred P1 si vyberte:** použijete dva vlastné vstupy, alebo jednu fiktívnu vetvu — marketing, inbox či stretnutie. Pri vlastných vstupoch si pripravte potrebné podklady. Pri deme v P2 vytvorte zamestnanca pre zvolenú oblasť a v P3 jeho zodpovedajúci všeobecný postup: návrh príspevku, triedenie textových mailov alebo zápis zo stretnutia. P1 vždy dopĺňa vaše skutočné osobné a firemné údaje.
+
+Bez Obsidianu otvorte svoj pracovný priečinok vo Finderi alebo Prieskumníkovi a súbor `Workshop/index.html` otvorte v prehliadači.
+
+**Demo uchovajte oddelene:** použite celý pripravený blok A/B s kontextom. Zadanie, vstupy, výsledky a opravy ukážky ukladajte do `Ukážky/Workshop/<vetva>/` (`marketing`, `inbox` alebo `stretnutie`); v novom chate B načítajte zadanie a výsledok A z rovnakého miesta. Fakty a obmedzenia dema patria iba do demo zadania, nie do vášho firemného profilu, modelu procesu alebo pracovného postupu. Trvalá oprava môže byť potvrdená všeobecná znovupoužiteľná zásada. Vlastné skutočné pravidlo môžete určiť výslovne; samotná ukážka ho nepotvrdzuje.
 
 ## P1: Doplňte firemný základ
 
@@ -52,6 +58,8 @@ Na výsledku potrebujem zmeniť [konkrétna chyba]. Správne má byť [konkrétn
 Zisti, či chyba vznikla v podkladoch, profile zamestnanca alebo pracovnom postupe. Navrhni najmenšiu opravu správneho zdroja. Trvalé nové pravidlo mi pred uložením potvrď. Pri schválenej oprave obnov odvodené pohľady a výsledok znovu skontroluj. Nestačí prepísať iba túto jednu odpoveď.
 ```
 
+**Overte:** oprava je uložená pri správnom zdroji a premietla sa do výsledku. Demo fakty a obmedzenia zostali iba v demo zadaní; skutočný profil a postup obsahujú len potvrdené vlastné pravidlá alebo všeobecné zásady.
+
 ## P6: Druhý vstup v novom chate
 
 Otvorte nový chat v koreňovom priečinku rovnakého systému. Doplňte meno svojho zamestnanca a postup.
@@ -71,6 +79,8 @@ Vstup B:
 Oliver, zhrň dnešný potvrdený výsledok a otvorené veci. Skontroluj, že rozhodnutia sú v príslušných dokumentoch, stav na pracovnej tabuli a história v dnešnom dennom zápise podľa pravidiel systému. Existujúce záznamy zachovaj, nevytváraj duplicity.
 Navrhni jeden najbližší krok. Ukáž mi, kde ho nabudúce nájdem a ako ho spustím v novom chate. Ak niečo ešte nefunguje alebo nie je overené, označ to jasne.
 ```
+
+**Overte:** nájdete uložený výsledok, potvrdené rozhodnutia, dnešný zápis a jeden ďalší krok na pracovnej tabuli. Viete, ako pokračovať v novom chate; neoverené alebo nefunkčné časti sú jasne označené.
 
 ## Čo si odnášate
 
