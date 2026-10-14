@@ -21,24 +21,39 @@ Implementácia podľa [špecifikácie v1.7](specifikacia.md), schválená 14.10.
 - [x] Negatívne prípady: cudzí obsah, symlink, poškodený model/ID, nesprávny pin/hash a nebezpečný archív.
 - [x] Zostavenie deterministické, všetky prenesené hashe a odkazy platné.
 - [x] macOS natívna Fáza 0, izolovaný runtime fallback a fresh-chat pokračovanie.
-- [ ] Nezávislá kontrola výsledku a jazykové review verejných pokynov.
-- [ ] GitHub zdroje + vývojový prerelease, úplný remote readback, checkpoint v Second Braine.
+- [x] Nezávislá kontrola výsledku a jazykové review verejných pokynov.
+- [x] GitHub zdroje + vývojový prerelease, úplný remote readback, checkpoint v Second Braine.
 
 Výsledky a presné prostredie sa doplnia po vykonaní. Skutočný Windows/Claude Code/cloud sync/Obsidian/začiatočnícky pilot sa týmto checklistom nepredstiera. Plný update/recovery medzi zariadeniami, Oliver, ďalšie dva procesy, procesný HTML manuál/generátor a integrácia účastníckeho modulu zostávajú ďalšou etapou; prvý balík neobsahuje nefunkčné odkazy na tieto budúce časti. Otvorená licencia startera sa nevydáva za rozhodnutú; oficiálny runtime má vlastný LICENSE.
 
 
-## Overenie kandidáta — 14.10.2026
+## Overenie prvého vydania — 14.10.2026
 
-macOS 27.0.1 arm64. Presný oficiálny runtime Node 24.16.0 overený podľa podpísaného SHASUMS (releaser fingerprint `5BE8A3F6C8A5C01D106C0AD820B1A390B168D356`); pôvod a štyri piny v [runtime evidencii](../content/runtime/node-24.16.0.json). Skutočný HTTPS download, natívne overenie, výber iba node+LICENSE a spustenie24.16.0 PASS. Runtime sa nebundluje a nevykonáva globálnu inštaláciu.
+macOS 27.0.1 arm64. Presný oficiálny runtime Node 24.16.0 overený podľa podpísaného SHASUMS (releaser fingerprint `5BE8A3F6C8A5C01D106C0AD820B1A390B168D356`); pôvod a štyri piny v [runtime evidencii](../content/runtime/node-24.16.0.json). Skutočný HTTPS download, natívne overenie, výber iba node+LICENSE a spustenie 24.16.0 PASS. Runtime sa nebundluje a nevykonáva globálnu inštaláciu.
 
-- Kompletná source suite pôvodne41/41 PASS bez SKIP; po doplnení CLI runtime guardu42 testov (17 core + 11 release + 14 workshop). Záverečná cielená release kontrola na pinovanom runtime prešla; zdrojové testy sú oddelené od Windows runtime. Core 17/17 samostatne prešiel aj na Node 26.5.0. Bez Gitu bez privátnej kanoniky modul 12 PASS / 0 FAIL / 2 SKIP; s kanonikou 13/0/1. Pôvodných 7 promptov/6 raw blokov/provenance byte-identických s 898dc6f, public/internal §1–17 zachované.
+- Kompletná source suite pôvodne 41/41 PASS bez SKIP; po doplnení CLI runtime guardu 42 testov (17 core + 11 release + 14 workshop). Záverečná cielená release kontrola na pinovanom runtime prešla; zdrojové testy sú oddelené od Windows runtime. Core 17/17 samostatne prešiel aj na Node 26.5.0. Bez Gitu bez privátnej kanoniky modul 12 PASS / 0 FAIL / 2 SKIP; s kanonikou 13/0/1. Pôvodných 7 promptov/6 raw blokov/provenance byte-identických s 898dc6f, public/internal §1–17 zachované.
 - Nový workspace má 28 súborov + installed manifest. Dva korene majú identickú tabuľu s 8 setup ID a rôzne workspaceID. Verify kontroluje skutočné bajty, ownership, metadata, model, ID a existujúce wiki ciele. Začnite tu je seeded; package/generated zmena má konflikt, personalizácia sa nereparuje ani neresetuje.
 - Natívna Mac Fáza0 úspešne overila lokálnu fixture, extrahované súbory a bundle apply. Nesprávny pin/hash, repinned traversal/symlink a case/prefix/rezervované názvy majú zastavenie. Cudzí cieľ, symlinky, neplatné/duplicitné/chýbajúce ID a staged/promotion zlyhanie zachovávajú pôvodný obsah.
 - Reálny Codex CLI 0.144.1, ChatGPT autentifikácia, ephemeral/config-isolated workspace-write: agent zo súborov doplnil fiktívny profil firmy, uzavrel iba 3 zodpovedané otázky, vytvoril platné user-UUID, denný trail a index. Osobný profil aj nezodpovedané otázky zachované. Externý verify PASS, rovnaké apply 0 writes a všetkých 30 bajtových hashov nezmenených. Druhý nový read-only chat bez histórie správne načítal fakty, otvorené otázky, jediný ďalší krok aj hranice foundation; 0 zmien. Nie je to desktopUI/Claude/Windows pilot ani dôkaz natívneho Oliverovho volania.
 - Nezávislá kontrola zachytila tri chyby: slug ID mimo modelu, package ownership Začnite tu a case kolíziu archívu. Opravy a regresie PASS. Reálny chat odhalil nejasnú wiki inštrukciu; spresnená všetkým odkazom, nový čistý test vyššie PASS. Predošlé disposable prototypy nie sú dôkazom finálneho balíka.
 
-Release builder CLI musí používať presneNode 24.16.0: novšia zlib komprimuje odlišné bajty. Rovnaké vstupy na pinovanom runtime vytvoria identické 3 assety, CLI na 26.5.0 odmietne výkon pred zápisom. Použi presnú cestu overeného runtime a `scripts/release/build-release.mjs --commit <40hex> --out <novy-absolutny-priecinok>`. Zostavený archív má 8 explicitne povolených vstupov; osobný checkout AGENTS, tests, outputs, lektorské podklady a audit prompt doň nepatria. Foundation neobsahuje tretie strany Mermaid/YAML/Markdown; ich licencie sa vyriešia pri ďalšej etape.
+Release builder CLI musí používať presne Node 24.16.0: novšia zlib komprimuje odlišné bajty. Rovnaké vstupy na pinovanom runtime vytvoria identické 3 assety, CLI na 26.5.0 odmietne výkon pred zápisom. Použi presnú cestu overeného runtime a `scripts/release/build-release.mjs --commit <40hex> --out <novy-absolutny-priecinok>`. Zostavený archív má 8 explicitne povolených vstupov; osobný checkout AGENTS, tests, outputs, lektorské podklady a audit prompt doň nepatria. Foundation neobsahuje tretie strany Mermaid/YAML/Markdown; ich licencie sa vyriešia pri ďalšej etape.
 
 ## Ďalší celok
 
 Oliverov profil/workflowy a adaptéry, zostávajúce dva modely, generátor/manuál, následná integrácia Workshop a recompute komponentových hashov. Potom celý Mac/Windows/Claude/Obsidian/sync/začiatočnícky pilot a konkrétne update/recovery prípady podľa v1.7. Vedený firemný základ možno začať už na tomto foundation.
+
+
+## Publikované vydanie a postflight
+
+[Prerelease v0.1.0-core.1](https://github.com/tomasmartincok/company-os/releases/tag/v0.1.0-core.1) má zdrojový [commit 42f21d6](https://github.com/tomasmartincok/company-os/commit/42f21d6507c1c7065882d10e45aa5b53410f4eec). Zostavenie presného commitu dvakrát vytvorilo byte-identické tri assety. GitHub úplný strom a všetkých 32 blobov sú byte-identické s lokálnymi súbormi. Verejný strom je zdroj pre review; archív prenáša iba osem deklarovaných vstupov foundation.
+
+| Asset | Bajty | SHA-256 |
+|---|---:|---|
+| company-os-core-0.1.0-core.1.tar.gz | 22607 | `6803dbc316f12d4eed9a658da7af816e9afaf3616e8556b67741cecb185412e0` |
+| manifest.json | 4544 | `6be1083a88da7abde03b8143f10175edaa86fcb91df9a7119751f79d7010ccb9` |
+| pokyn-instalacie.txt | 11038 | `6ad29e40b0a91fb44ddac05d2f07a08aba3e638391b8819023a30585955b6d54` |
+
+Skutočný natívny Mac pokyn stiahol verejný manifest/archív cez HTTPS, overil piny a všetky extrahované bajty pred čítaním INSTALL. Z tohto publikovaného overeného stagingu preflight PASS/0writes → apply PASS/29writes → verify PASS/0writes. Download celého inštalačného pokynu je byte-identický s odovzdaným assetom. Release API potvrdzuje prerelease, presný source commit, uploaded stav/veľkosť/digest všetkých troch assetov. Nezávislé Viktor QA PASS a Nina zdrojové aj finálne rendered-prompt QA PASS.
+
+Pin manifestu sa odovzdáva aj v dôveryhodnej správe organizátora; tento report ani meniteľný tag samy jeho pôvod nepotvrdzujú. Ďalšie zmeny tohto reportu sú dokumentovým closeoutom, source commit a piny vydania zostávajú uvedené vyššie.
