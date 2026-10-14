@@ -10,6 +10,8 @@ import { buildArtifacts, renderMarkdown } from '../scripts/build-workshop.mjs';
 
 const decodeHtml = value => value.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 const content = await loadSnapshots();
+let gitAvailable = false;
+try { execFileSync('git', ['--version'], { stdio: 'ignore' }); gitAvailable = true; } catch { /* Optional maintainer fixture; participant setup does not need Git. */ }
 
 test('Snapshot provenance verifies 7 prompts, 3 branches and 6 exact input blocks', () => {
   assert.equal(content.prompts.length, 7);
@@ -64,7 +66,7 @@ test('Fresh build is deterministic, relative links exist and output contains no 
   const first = await buildArtifacts(content);
   const second = await buildArtifacts(content);
   assert.deepEqual(first, second);
-  for (const [filename, bytes] of Object.entries(first)) assert.doesNotMatch(bytes, /\/Users\/|\/private\/|Efforts\/|\[\[|Kontrola lektora|lektorsk[yý]|\bERP\b|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/i, filename);
+  for (const [filename, bytes] of Object.entries(first)) assert.doesNotMatch(bytes, /\/Users\/|\/private\/|Efforts\/|\[\[|Kontrola lektora|lektorsk[yý]|(?<![\p{L}\p{N}_])ERP(?![\p{L}\p{N}_])|[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/iu, filename);
   const html = first['Workshop/index.html'];
   for (const [, href] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (href.startsWith('#')) assert.ok(html.includes(`id="${href.slice(1)}"`), href);
@@ -167,15 +169,17 @@ test('Demo routes stay within their own branch and B explicitly reloads A withou
       assert.match(payload, /Trvalú opravu navrhni iba ako všeobecnú znovupoužiteľnú zásadu/);
       assert.match(payload, /Ak výslovne určím pravidlo ako vlastné skutočné pravidlo/);
       assert.ok(payload.endsWith(branch.blocks[inputIndex]));
-      if (inputIndex === 1) assert.ok(payload.includes(`načítaj uložené zadanie.md, vysledok-a.md a demo opravy z Ukážky/Workshop/${branch.id}/`));
+      assert.match(payload, /Demo opravy dopíš do sekcie Demo opravy v zadanie\.md/);
+      assert.match(payload, /Do pracovnej tabule a denného zápisku pridaj len odkaz/);
+      if (inputIndex === 1) assert.ok(payload.includes(`načítaj z Ukážky/Workshop/${branch.id}/ súbory zadanie.md vrátane sekcie Demo opravy a vysledok-a.md`));
     }
   }
   assert.throws(() => demoPayload({ ...content.branches[0], id: '../../real' }, 0), /Unknown demo branch/);
 });
 
-test('Public filter accepts interpretácia but rejects an ERP token and private markers', () => {
-  assert.doesNotThrow(() => assertPublic('Interpretácia výsledku a interpretácia vstupu.'));
-  for (const value of ['ERP', 'údaje ERP systému', '(erp)', '[[súkromný odkaz]]', '/Users/private/file.md']) assert.throws(() => assertPublic(value), /private\/internal/);
+test('Public filter accepts Slovak words but rejects an ERP token and private markers', () => {
+  for (const value of ['Interpretácia výsledku a interpretácia vstupu.', 'Čerpáme', 'Čerpám', 'vyčerpá']) assert.doesNotThrow(() => assertPublic(value));
+  for (const value of ['ERP', 'údaje ERP systému', '(erp)', 'ERP-123', '[[súkromný odkaz]]', '/Users/private/file.md']) assert.throws(() => assertPublic(value), /private\/internal/);
 });
 
 test('Choice appears before P1, generic P2/P3 follow the branch and participant screens hide core integration markers', async () => {
@@ -203,7 +207,7 @@ test('Choice appears before P1, generic P2/P3 follow the branch and participant 
   for (const id of ['p5', 'p7']) assert.match(content.prompts.find(prompt => prompt.id === id).body, /\*\*Overte:\*\*/);
 });
 
-test('An isolated autocrlf=true Git checkout keeps component bytes LF and builds with the same hashes', async () => {
+test('An isolated autocrlf=true Git checkout keeps component bytes LF and builds with the same hashes', { skip: !gitAvailable && 'Git CLI unavailable; optional maintainer fixture' }, async () => {
   const temp = await mkdtemp(join(tmpdir(), 'company-os-workshop-autocrlf-'));
   const checkout = join(temp, 'checkout');
   await mkdir(checkout);
@@ -223,7 +227,7 @@ test('An isolated autocrlf=true Git checkout keeps component bytes LF and builds
     git(['init', '--quiet']);
     git(['config', 'core.autocrlf', 'true']);
     git(['config', 'core.eol', 'crlf']);
-    for (const root of ['.gitattributes', 'scripts', 'content/workshop', 'templates/zacnite-tu-workshop.md']) await collect(root);
+    for (const root of ['.gitattributes', 'scripts/build-workshop.mjs', 'scripts/workshop-content.mjs', 'scripts/workshop-assets', 'content/workshop', 'templates/zacnite-tu-workshop.md']) await collect(root);
     for (const path of paths) {
       const bytes = await readFile(join(repositoryRoot, path));
       const hash = execFileSync('git', ['-C', checkout, 'hash-object', '-w', '--stdin'], { input: bytes, encoding: 'utf8' }).trim();

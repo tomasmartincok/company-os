@@ -1,0 +1,53 @@
+{
+  "format": "company-os-node-pin-v1",
+  "version": "24.16.0",
+  "supportedExistingNode": "24.16.0",
+  "license": "Node.js LICENSE retained alongside selected executable; no npm installation",
+  "artifacts": [
+    {
+      "platform": "darwin-arm64",
+      "name": "node-v24.16.0-darwin-arm64.tar.gz",
+      "url": "https://nodejs.org/dist/v24.16.0/node-v24.16.0-darwin-arm64.tar.gz",
+      "sha256": "39189dab4eeb15706c424af0ac08a3044c9e48f7db12a7d77f6b7aafc7dd5df6",
+      "executable": "node-v24.16.0-darwin-arm64/bin/node",
+      "license": "node-v24.16.0-darwin-arm64/LICENSE"
+    },
+    {
+      "platform": "darwin-x64",
+      "name": "node-v24.16.0-darwin-x64.tar.gz",
+      "url": "https://nodejs.org/dist/v24.16.0/node-v24.16.0-darwin-x64.tar.gz",
+      "sha256": "298b4c7b3cb80765c8703e42b90324a4ece3b6634947b89e769c3c980ab55185",
+      "executable": "node-v24.16.0-darwin-x64/bin/node",
+      "license": "node-v24.16.0-darwin-x64/LICENSE"
+    },
+    {
+      "platform": "win-arm64",
+      "name": "node-v24.16.0-win-arm64.zip",
+      "url": "https://nodejs.org/dist/v24.16.0/node-v24.16.0-win-arm64.zip",
+      "sha256": "14834611d4c6b3c06054e7007732b90474c16e0b32f395e05b55a571ef71c6d2",
+      "executable": "node-v24.16.0-win-arm64/node.exe",
+      "license": "node-v24.16.0-win-arm64/LICENSE"
+    },
+    {
+      "platform": "win-x64",
+      "name": "node-v24.16.0-win-x64.zip",
+      "url": "https://nodejs.org/dist/v24.16.0/node-v24.16.0-win-x64.zip",
+      "sha256": "edaca9bd58ec8e92037dac4e877d52f6b8f430b81c18b57e264b4e2fb111cd56",
+      "executable": "node-v24.16.0-win-x64/node.exe",
+      "license": "node-v24.16.0-win-x64/LICENSE"
+    }
+  ],
+  "provenance": {
+    "verifiedDate": "2026-10-14",
+    "checksumsUrl": "https://nodejs.org/dist/v24.16.0/SHASUMS256.txt",
+    "checksumsSha256": "e20ebbf68d33f42d196a7a11b8a91d422fa37b759c0a51aa4857977135cc5e95",
+    "signatureUrl": "https://nodejs.org/dist/v24.16.0/SHASUMS256.txt.sig",
+    "signatureSha256": "cc94428d80ae6770e1bc4c36dd22e957910fc135cc33926c01ad504206a05d0d",
+    "keyringUrl": "https://raw.githubusercontent.com/nodejs/release-keys/main/gpg-only-active-keys/pubring.kbx",
+    "keyringSha256": "140f2ad5260fd62773b6243ce8e1d3009645d558f121b8262c55e383dc285932",
+    "fingerprintSource": "https://github.com/nodejs/node#release-keys",
+    "validSignaturePrimaryFingerprint": "5BE8A3F6C8A5C01D106C0AD820B1A390B168D356",
+    "validation": "gpg --homedir <new-private-temp> --no-default-keyring --keyring <downloaded-project-keyring> --status-fd 1 --verify SHASUMS256.txt.sig SHASUMS256.txt; VALIDSIG primary fingerprint matched official Node README. No global trust/keyring changes.",
+    "artifactEvidence": "Four hashes from signed checksum document; darwin-arm64 archive downloaded and SHA verified locally. Other platform execution NOT TESTED."
+  }
+}

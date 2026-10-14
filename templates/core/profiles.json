@@ -1,0 +1,28 @@
+{
+  "O mne.md": {
+    "title": "O mne",
+    "type": "identity",
+    "sections": [
+      "Meno a oslovenie",
+      "Rola",
+      "Jazyk a komunikácia",
+      "Pracovné preferencie",
+      "Rozhodovanie",
+      "Spolupráca s AI"
+    ]
+  },
+  "Prehľad firmy.md": {
+    "title": "Prehľad firmy",
+    "type": "company",
+    "sections": [
+      "Firma a web",
+      "Ponuka",
+      "Zákazníci",
+      "Odlišnosti",
+      "Ľudia a zodpovednosti",
+      "Aktuálne priority",
+      "Potvrdené rozhodnutia",
+      "Zdroje a neznáme"
+    ]
+  }
+}

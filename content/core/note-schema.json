@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "company-os-note-v1",
+  "title": "Základná schéma poznámky company-os",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "status",
+    "created",
+    "updated",
+    "owner",
+    "source",
+    "ai-generated",
+    "tags"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "identity",
+        "company",
+        "map",
+        "board",
+        "guide",
+        "tool",
+        "preparation",
+        "note",
+        "daily",
+        "client",
+        "project",
+        "index",
+        "knowledge",
+        "idea",
+        "log"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "archived"
+      ]
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ai-generated": {
+      "type": "boolean"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "client": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "certainty": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "partial",
+        "unknown"
+      ]
+    },
+    "company-os-extra-types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^custom-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+    "company-os-extra-fields": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^custom-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "additionalProperties": {
+        "enum": [
+          "string",
+          "boolean",
+          "number",
+          "date",
+          "string-list"
+        ]
+      }
+    }
+  }
+}
