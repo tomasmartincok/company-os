@@ -792,3 +792,5 @@ Implementácia schválená14.10.2026 podľa v1.7. [Plán a dôkazy](core-foundat
 ## 26. Aktuálna zmena v1.8 — inštalácia bez Node
 
 Schválené 15.10.2026. Aktuálny kontrakt je v §1–17, návod v root INSTALL a stav overenia v [reporte jednoduchej inštalácie](simple-install.md). Predchádzajúce §18–25 zachovávajú históriu zdrojov, auditov a prvého foundation vydania; ich Node/Fáza 0 postup sa nepoužíva ako predvolená inštalácia. Pripravený obsah `starter/` je odvodený z existujúcej kanoniky; jednoduchá verzia je `0.2.0-simple.1`.
+
+Overenie zmeny v1.8: 49/49 source testov bez SKIP, reálny GitHub → nový Codex chat → uložený fiktívny firemný kontext → druhý nový chat/retry 0 zápisov a 32 nezmenených hashov/mtime; nezávislé Viktor a Nina kontroly PASS. Source commit `d8d3e14c7e5f18a193b81a9c5e5bc08926af852b` má 67 úplne overených vzdialených blobov. Dokumentové spresnenia nemenia payload. Prostredie a hranice sú v [aktuálnom reporte](simple-install.md). Úspech tohto celku neuzatvára AC celého systému ani Windows/Claude/cloud pilot.
