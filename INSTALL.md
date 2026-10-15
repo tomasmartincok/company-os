@@ -10,7 +10,7 @@ Over OS, dostupné natívne nástroje a oprávnenie na tento koreň. Cieľ nesmi
 
 ## 2. Vyber jeden zdroj
 
-Dôveryhodný zdroj zadania je `https://github.com/tomasmartincok/company-os`. Ak používateľ určil commit, použi ho. Inak zisti aktuálny **40-znakový SHA** hlavnej vetvy cez GitHub konektor alebo `https://api.github.com/repos/tomasmartincok/company-os/commits/main`. Potom načítaj tento INSTALL aj `starter/manifest.json` z **toho istého SHA** a až ďalej pracuj. Zaznamenaj SHA; nemiešaj súbory z main počas sťahovania.
+Dôveryhodný zdroj zadania je `https://github.com/tomasmartincok/company-os`. Ak používateľ určil commit, použi ho. Inak zisti aktuálny **40-znakový SHA** hlavnej vetvy cez GitHub konektor alebo `https://api.github.com/repos/tomasmartincok/company-os/git/ref/heads/main` (hodnota `object.sha`). Potom načítaj tento INSTALL aj `starter/manifest.json` z **toho istého SHA** a až ďalej pracuj. Zaznamenaj SHA; nemiešaj súbory z main počas sťahovania.
 
 Základ surových súborov je `https://raw.githubusercontent.com/tomasmartincok/company-os/<SHA>/starter/`. Každý segment cesty URL-kóduj ako UTF-8; relatívnu cestu z manifestu zachovaj na disku. Manifest musí mať schema `company-os-prepared-starter-v1`, version `0.2.0-simple.1`, scope `foundation` a presne `fileCount` jedinečných položiek. Over cesty: žiadne absolútne cesty, `..`, spätné lomky, zvláštne zariadenia, kolízie názvov ani nepovolené prefixy; názov súboru nesmie zároveň byť nadradeným priečinkom. Prenášajú sa iba uvedené Markdown, JSON a model.yaml dokumenty, žiadne spustiteľné súbory.
 
@@ -30,7 +30,7 @@ Vytvor nový lokálny staging mimo cieľa a známych cloudových priečinkov. Ma
 |---|---|---|
 | HTTPS súbor | `/usr/bin/curl --fail --location --proto '=https' --proto-redir '=https'` | System32 `curl.exe` s rovnakými obmedzeniami |
 | SHA-256 | `/usr/bin/shasum -a 256` | System32 `certutil.exe -hashfile <súbor> SHA256` |
-| JSON údaje | čítanie agentom alebo `/usr/bin/plutil` | čítanie agentom alebo natívne JSON príkazy PowerShellu |
+| JSON údaje | čítanie agentom alebo `/usr/bin/osascript -l JavaScript` s `JSON.parse` | čítanie agentom alebo natívne JSON príkazy PowerShellu |
 | Vytvorenie a kopírovanie | `/bin/mkdir`, `/bin/cp -n` | `[IO.Directory]::CreateDirectory`, `[IO.File]::Copy(source,target,$false)` |
 | UUID | `/usr/bin/uuidgen` | `[Guid]::NewGuid()` |
 
