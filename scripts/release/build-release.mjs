@@ -23,7 +23,7 @@ export async function buildRelease({ sourceRoot = repository, output, sourceComm
   if (existing?.length) throw new Error('Output must be absent or empty');
   const files = {};
   for (const path of BUNDLE_FILES) {
-    const source = join(sourceRoot, path);
+    const source = join(sourceRoot, path === 'INSTALL.md' ? 'docs/legacy-install-core.md' : path);
     const state = await lstat(source);
     if (!state.isFile() || state.isSymbolicLink()) throw new Error('Bundle source must be a regular file');
     files[path] = await readFile(source);

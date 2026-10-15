@@ -18,8 +18,9 @@ async function fixture(t) {
   t.after(()=>rm(scratch,{recursive:true,force:true}));
   const source=join(scratch,'source');
   for (const path of BUNDLE_FILES) {
-    await mkdir(dirname(join(source,path)),{recursive:true});
-    await writeFile(join(source,path),path==='content/runtime/node-24.16.0.json'?JSON.stringify(pin,null,2)+'\n':path==='INSTALL.md'?renderInstall(pin):`fixture: ${path}\n`);
+    const inputPath = path === 'INSTALL.md' ? 'docs/legacy-install-core.md' : path;
+    await mkdir(dirname(join(source,inputPath)),{recursive:true});
+    await writeFile(join(source,inputPath),path==='content/runtime/node-24.16.0.json'?JSON.stringify(pin,null,2)+'\n':path==='INSTALL.md'?renderInstall(pin):`fixture: ${path}\n`);
   }
   await mkdir(join(source,'templates'),{recursive:true});
   await writeFile(join(source,'templates/pokyn-fazy-0.template.md'),await readFile(join(root,'templates/pokyn-fazy-0.template.md')));
@@ -138,8 +139,8 @@ test('Windows rendered commands use only System32 native tools and never policy 
   assert.ok(script.indexOf('manifest hash mismatch')<script.indexOf('& $Tar -tzf'));
   assert.ok(script.indexOf('archive links or special entries')<script.indexOf('& $Tar -xzf'));
 });
-test('INSTALL is derived from single runtime pin and extracts only executable/license',async()=>{
-  assert.equal(await readFile(join(root,'INSTALL.md'),'utf8'),renderInstall(pin));
+test('legacy INSTALL is derived from single runtime pin and extracts only executable/license',async()=>{
+  assert.equal(await readFile(join(root,'docs/legacy-install-core.md'),'utf8'),renderInstall(pin));
   const runtime=renderRuntimeMac(pin);
   assert.match(runtime,/Only these two literal members/);assert.match(runtime,/runtime hash mismatch/);
   assert.ok(runtime.indexOf('runtime hash mismatch')<runtime.indexOf('/usr/bin/tar -xzf'));

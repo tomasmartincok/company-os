@@ -1,5 +1,7 @@
 # Prvý funkčný celok inštalátora
 
+Historický report vydania z 14.10.2026. Aktuálna predvolená inštalácia preberá [hotové súbory bez Node](simple-install.md); návod tohto staršieho vydania je zachovaný v [legacy INSTALL](legacy-install-core.md).
+
 Implementácia podľa [špecifikácie v1.7](specifikacia.md), schválená 14.10.2026. Označenie balíka: `0.1.0-core.1`, rozsah `foundation`. Tento celok vytvorí súborový základ, overí jeho stav a zachová úpravy pri opakovaní. Celý workshopový systém sa dokončí v ďalšej etape.
 
 ## Rozsah

@@ -83,5 +83,5 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
   const pin = JSON.parse(await readFile(resolve(root,'content/runtime/node-24.16.0.json'),'utf8'));
   if (process.argv.slice(2).join(' ') !== '--write') throw new Error('Usage: node scripts/release/runtime.mjs --write');
-  await writeFile(resolve(root,'INSTALL.md'),renderInstall(pin));
+  await writeFile(resolve(root,'docs/legacy-install-core.md'),renderInstall(pin));
 }

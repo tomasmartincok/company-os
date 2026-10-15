@@ -1,0 +1,183 @@
+{
+  "schema": "company-os-prepared-starter-v1",
+  "version": "0.2.0-simple.1",
+  "date": "2026-10-15",
+  "scope": "foundation",
+  "fileCount": 29,
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 3949,
+      "sha256": "fcd3aa51318d7d60c967839784ea53cffec8991b9909e993809bc004738c5760",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Postupy/denny-trail.md",
+      "bytes": 988,
+      "sha256": "5d6b3019f0e6af6688122822ea8673da53ad477a6f18de8be9d067c50a8e978d",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Postupy/inbox-a-napady.md",
+      "bytes": 650,
+      "sha256": "096cf305a03a5e89e775f37314f90f5c28b3f8fa409bcc9e24fb112a139f4a95",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Postupy/kontrola-vysledku.md",
+      "bytes": 620,
+      "sha256": "06cbcb98b09171136cdad66c68505ec8dcfc5359571be5c67828bb65813c7736",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Postupy/pracovna-tabula.md",
+      "bytes": 788,
+      "sha256": "3b67cd7807e3ae3af1a2678e1f183379332d1124ba9c4771cdf6c33004d63ade",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Postupy/ukladanie-a-deduplikacia.md",
+      "bytes": 1073,
+      "sha256": "d4f8c0a35ead8e05c0a225625f3d792dc17a8aadf2eb427945adf0a0c9424711",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Systém/Návody/Metadáta.md",
+      "bytes": 1371,
+      "sha256": "6b2a8384ad6e8cde0f0b1c4ba4885e45f79bef49c60c92ea727c719e6d00c582",
+      "ownership": "generated"
+    },
+    {
+      "path": "AI OS/Systém/Návody/Synchronizácia a zálohovanie.md",
+      "bytes": 1930,
+      "sha256": "4ab58c4b222163a2dd99d5f39a3cecce5df4826ba3d3cd520368a96279cfff26",
+      "ownership": "seeded"
+    },
+    {
+      "path": "AI OS/Systém/Schémy/poznamka.schema.json",
+      "bytes": 2056,
+      "sha256": "70860ba81621aa122c2dedb5bd79793b96ce63e1e7f4103922b42ce95179ed7e",
+      "ownership": "package"
+    },
+    {
+      "path": "AI OS/Tím/index.md",
+      "bytes": 587,
+      "sha256": "49c42f104a8a4d5cef92b64c24d6335df3d60e5a8fef1b6ba5a602c1120fce3c",
+      "ownership": "generated"
+    },
+    {
+      "path": "Atlas/Nápady/index.md",
+      "bytes": 341,
+      "sha256": "4a728020e33efc1ddb1990eae97eea57f7af9cac28f76bc96a3ac4a95815a929",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Atlas/Rozcestníky/index.md",
+      "bytes": 368,
+      "sha256": "ef0b3ac4218085941b1a525384601f6d55741fc0e534447378606a4d27578188",
+      "ownership": "seeded"
+    },
+    {
+      "path": "CLAUDE.md",
+      "bytes": 11,
+      "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49",
+      "ownership": "package"
+    },
+    {
+      "path": "Inbox/README.md",
+      "bytes": 409,
+      "sha256": "dece125691c8ec213280512e3e150c829ff46f558f2774787ffbdace635e76f1",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Kalendár/Denné zápisky/index.md",
+      "bytes": 366,
+      "sha256": "fa5f2cc3b163871342b255ac613c5e36ed3449ef24258ae921139af33ec009b5",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Mapa systému.md",
+      "bytes": 3810,
+      "sha256": "aaee6aee9e533f94b5d3917e60619e1368343542e5ef17aede561384c1320966",
+      "ownership": "seeded"
+    },
+    {
+      "path": "O mne.md",
+      "bytes": 623,
+      "sha256": "ac25fe88b39cc9a1fdbcde6c6ae786e5068c1b392e3ab33471a289d0703aeeda",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Pracovná tabuľa.md",
+      "bytes": 4956,
+      "sha256": "2ab544c9b38c4fc1ac86100f2ab5e39d8aaa76f1de438bcfc5b1d3db23157ad7",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Prehľad firmy.md",
+      "bytes": 790,
+      "sha256": "337fb9cdd2aa277fa7005a6655e3a1c0d8e62bdb82c62dc77351016749879bee",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Procesy/system-nastavenie-firmy/model.yaml",
+      "bytes": 5339,
+      "sha256": "dda9a5d64e54e999f87ff5fea8331c998439e9d11aa7c3542ce1ea36c18c664a",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Práca/Firma/Nástroje.md",
+      "bytes": 719,
+      "sha256": "b64e4cea9727ad54d84b7bd55b491d290be1fa50be0f010f69569dcc5ce144e7",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Práca/Klienti/index.md",
+      "bytes": 373,
+      "sha256": "29425855498c561b4026e67644bf0ce14e7c55ba6684ad7af8705a7253b6f66c",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Práca/Príležitosti/index.md",
+      "bytes": 365,
+      "sha256": "c44b1ba60b47f9fddc1fa1d8e09ae6f3ea9a583d08b3fa120dbb042480ea525a",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Ukážky/README.md",
+      "bytes": 594,
+      "sha256": "d139013eac97e45efb0eb621ee2e9952459639fa76ab45fea7f3781021c6ac3c",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Začnite tu.md",
+      "bytes": 2372,
+      "sha256": "225dcc3ccdf9cec9f02ba2d265df18e35ebdc28618ca30124bccea4ed66a4b03",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Znalostná báza/Pravidlá.md",
+      "bytes": 769,
+      "sha256": "c6d3ccfc49c0b2dd9452ad6f88efba923483ab6c673a3620e9b5485f48a8e90e",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Znalostná báza/Spracované poznatky/index.md",
+      "bytes": 362,
+      "sha256": "8f81de95ec6f7427c60931bdfc8b5d51059587b13fafb0e841333a0a6fc2b85f",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Znalostná báza/Spracované poznatky/log.md",
+      "bytes": 360,
+      "sha256": "73b9e54566b02fadce36bb28ade4b11934f94ddc2d07831d23cfa865a34694cb",
+      "ownership": "seeded"
+    },
+    {
+      "path": "Znalostná báza/Zdroje/index.md",
+      "bytes": 396,
+      "sha256": "e633278233c404f94173f6f82c888d4d053010d11562db39adc2d045d58a69eb",
+      "ownership": "seeded"
+    }
+  ]
+}

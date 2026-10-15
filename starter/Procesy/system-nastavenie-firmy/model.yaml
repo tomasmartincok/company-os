@@ -1,0 +1,187 @@
+{
+  "schema": "company-os-setup-model-v1",
+  "id": "system-nastavenie-firmy",
+  "version": "0.2.0-simple.1",
+  "stages": [
+    {
+      "id": "priestor",
+      "tasks": [
+        "setup-priestor"
+      ]
+    },
+    {
+      "id": "firma",
+      "tasks": [
+        "setup-osoba",
+        "setup-firma"
+      ]
+    },
+    {
+      "id": "spolupraca",
+      "tasks": [
+        "setup-oliver",
+        "setup-nastroje"
+      ]
+    },
+    {
+      "id": "rola-proces",
+      "tasks": [
+        "setup-zamestnanec",
+        "setup-proces"
+      ]
+    },
+    {
+      "id": "samostatnost",
+      "tasks": [
+        "setup-vstupy"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "setup-priestor",
+      "title": "Overiť pracovný priestor a manuál",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Overiť načítanie pravidiel v novom chate z koreňa.",
+      "answerTarget": "Začnite tu.md",
+      "questions": [
+        {
+          "id": "setup-priestor-prostredie",
+          "text": "Aký OS, AI klient a pracovný priečinok používaš?"
+        },
+        {
+          "id": "setup-priestor-ulozisko",
+          "text": "Je priečinok lokálny alebo synchronizovaný a sú súbory dostupné offline?"
+        }
+      ]
+    },
+    {
+      "id": "setup-osoba",
+      "title": "Doplniť a potvrdiť osobný profil",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Zodpovedať prvú chýbajúcu otázku.",
+      "answerTarget": "O mne.md",
+      "questions": [
+        {
+          "id": "setup-osoba-oslovenie",
+          "text": "Ako ťa oslovovať?"
+        },
+        {
+          "id": "setup-osoba-rola",
+          "text": "Aká je tvoja rola?"
+        },
+        {
+          "id": "setup-osoba-komunikacia",
+          "text": "Aký jazyk, tón a podrobnosť preferuješ?"
+        },
+        {
+          "id": "setup-osoba-spolupraca",
+          "text": "Ako chceš spolupracovať a rozhodovať?"
+        }
+      ]
+    },
+    {
+      "id": "setup-firma",
+      "title": "Doplniť a potvrdiť profil firmy",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Potvrdiť dostupné firemné fakty.",
+      "answerTarget": "Prehľad firmy.md",
+      "questions": [
+        {
+          "id": "setup-firma-firma",
+          "text": "Ako sa firma volá a aký má web?"
+        },
+        {
+          "id": "setup-firma-ponuka",
+          "text": "Čo ponúkaš a komu?"
+        },
+        {
+          "id": "setup-firma-odlisnosti",
+          "text": "Čím sa líšiš od alternatív?"
+        },
+        {
+          "id": "setup-firma-priority",
+          "text": "Aká je teraz jedna hlavná priorita?"
+        }
+      ]
+    },
+    {
+      "id": "setup-oliver",
+      "title": "Prispôsobiť Olivera a spoluprácu",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Pokračovať po dodaní rolového jadra.",
+      "answerTarget": "Prehľad firmy.md",
+      "questions": [
+        {
+          "id": "setup-oliver-kompetencie",
+          "text": "Čo má tvoja pravá ruka riešiť a kde rozhoduješ ty?"
+        }
+      ]
+    },
+    {
+      "id": "setup-nastroje",
+      "title": "Zmapovať nástroje a oprávnenia",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Doplniť inventár používaných nástrojov.",
+      "answerTarget": "Práca/Firma/Nástroje.md",
+      "questions": [
+        {
+          "id": "setup-nastroje-nastroje",
+          "text": "Aké nástroje už používaš a ktoré údaje v nich majú autoritu?"
+        },
+        {
+          "id": "setup-nastroje-hranice",
+          "text": "Ktoré kroky potrebujú tvoje konkrétne schválenie?"
+        }
+      ]
+    },
+    {
+      "id": "setup-zamestnanec",
+      "title": "Vytvoriť prvého odborného zamestnanca",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Pokračovať po dodaní tvorby rolí.",
+      "answerTarget": "Prehľad firmy.md",
+      "questions": [
+        {
+          "id": "setup-zamestnanec-vysledok",
+          "text": "Aký opakovaný výsledok má tvoj prvý zamestnanec doručovať?"
+        }
+      ]
+    },
+    {
+      "id": "setup-proces",
+      "title": "Popísať prvý pracovný postup",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Pokračovať po dodaní procesného generátora.",
+      "answerTarget": "Pracovná tabuľa.md",
+      "questions": [
+        {
+          "id": "setup-proces-proces",
+          "text": "Aké sú vstupy, kroky, vetvy a kontrola pracovného postupu?"
+        }
+      ]
+    },
+    {
+      "id": "setup-vstupy",
+      "title": "Vyskúšať dva vstupy a pokračovanie",
+      "owner": "používateľ + AI sprievodca",
+      "next": "Pokračovať po dodaní celého workshopového jadra.",
+      "answerTarget": "Pracovná tabuľa.md",
+      "questions": [
+        {
+          "id": "setup-vstupy-skuska",
+          "text": "Ktoré dva odlišné vstupy vyskúšaš a ako posúdiš ich výsledok?"
+        }
+      ]
+    }
+  ],
+  "optional_followups": [
+    {
+      "id": "user-961cbf22-10d4-497c-9c8c-09cb8ae462f0",
+      "title": "Nastaviť synchronizáciu a zálohovanie",
+      "owner": "používateľ",
+      "next": "Začať lokálne alebo si neskôr zvoliť cloud a nezávislú zálohu; pred zmenou pripraviť plán.",
+      "detail": "AI OS/Systém/Návody/Synchronizácia a zálohovanie.md"
+    }
+  ]
+}

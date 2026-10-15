@@ -6,6 +6,9 @@ import {createHash, randomUUID} from 'node:crypto';
 import {checkPaths, fail, safeRelative, validateFiles, validateSetupModel} from './validate.mjs';
 
 export const CORE_VERSION = '0.1.0-core.1';
+export const SIMPLE_VERSION = '0.2.0-simple.1';
+export const SIMPLE_DATE = '2026-10-15';
+export const SIMPLE_SYNC_TASK = 'user-961cbf22-10d4-497c-9c8c-09cb8ae462f0';
 const RELEASE_DATE = '2026-10-14';
 const SOURCE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MANIFEST = '.os-starter/installed.json';
@@ -22,7 +25,9 @@ function board(model, date) {
   const tasks = model.tasks.map(task => `- [ ] ${task.title} <!-- os:task:${task.id} -->\n  - Vlastník: ${task.owner}.\n  - Ďalší krok: ${task.next}\n  - Otázky:\n${task.questions.map(question => `    - [ ] ${question.text} <!-- os:question:${question.id} -->`).join('\n')}\n  - Odpovede: ${link(task.answerTarget)}`).join('\n\n');
   return note('Pracovná tabuľa', 'board', `## Dokončenie company-os\n\nFoundation je technický prvý celok. Checkboxy sa odkliknú až po dôkaze; niektoré ciele vyžadujú ďalší rolový/procesný celok. Stav a jednotlivé otázky aktualizuj tu, potvrdené odpovede iba v cieľových dokumentoch. Úlohy sa pri opakovaní inštalácie nevytvoria znova.\n\n${tasks}\n\n## Teraz\n\nZatiaľ bez ďalšej úlohy.\n\n## Čakáme na\n\nDodanie Olivera, zvyšných dvoch štartovacích modelov, generátora/manuálu a workshopovej integrácie.\n\n## Neskôr\n\nZatiaľ bez ďalšej úlohy.\n\n## Dokončené\n\nZatiaľ bez doloženého pracovného výsledku.`, date, ['Začnite tu.md', 'Mapa systému.md', 'O mne.md', 'Prehľad firmy.md', 'AI OS/Tím/index.md']);
 }
-export async function buildCoreFiles({version = CORE_VERSION, date = RELEASE_DATE} = {}) {
+export async function buildCoreFiles({version = CORE_VERSION, date = RELEASE_DATE, variant = 'foundation'} = {}) {
+  if (variant === 'simple') return buildSimpleFiles(await buildCoreFiles());
+  if (variant !== 'foundation') fail('UNSUPPORTED_VERSION', 'Neznámy variant obsahu.');
   if (version !== CORE_VERSION || date !== RELEASE_DATE) fail('UNSUPPORTED_VERSION', 'Foundation renderer podporuje iba vlastnú release verziu a jej dátum.');
   const model = validateSetupModel(JSON.parse(await fs.readFile(path.join(SOURCE_ROOT, 'content/core/setup-model.json'), 'utf8')));
   if (model.version !== version) fail('INVALID_MODEL', 'Verzia modelu sa nezhoduje s core.');
@@ -69,6 +74,67 @@ export async function buildCoreFiles({version = CORE_VERSION, date = RELEASE_DAT
   validateFiles(files);
   return files;
 }
+
+function buildSimpleFiles(legacy) {
+  // One renderer remains the source of all shared rules and profiles. This product
+  // variant changes delivery wording and adds the explicitly optional storage task.
+  const files = {...legacy};
+  files['Začnite tu.md'] = note('Začnite tu', 'guide', `## Pripravený pracovný priestor
+
+Toto je súkromný súborový pracovný priestor firmy. Inštalácia skopírovala pripravené súbory z GitHubu; nepotrebuješ Node.js, Git, Python ani terminál. Pracuješ cez lokálneho AI klienta, napríklad Codex alebo Claude Code. Obsidian je voliteľný; koreň otvor ako samostatný trezor.
+
+Máš základné pravidlá, profily, mapu, pracovnú tabuľu, schému a model nastavenia firmy. Oliver, ďalšie dva štartovacie procesy, procesný manuál a prepojenie workshopových materiálov sú ďalší celok. Tento základ ich nepredstiera.
+
+## Začni v novom chate
+
+Otvor nový chat z tohto koreňa a povedz:
+
+> Prečítaj AGENTS.md, moje vstupné dokumenty a Pracovnú tabuľu. Povedz, čo je pripravené a čo ešte chýba. Ak nemám inú úlohu, polož jednu otázku, ktorá pomôže doplniť firmu.
+
+Agent má pomenovať načítané súbory, odlíšiť neznáme údaje a pokračovať tvojou konkrétnou prácou. Nepovinné nastavenie neblokuje bežnú úlohu. Skutočné načítanie v tvojom klientovi treba vidieť; súbory samy ho nedokazujú.
+
+## Všetky otvorené kroky na jednom mieste
+
+${link('Pracovná tabuľa.md', 'Otvor pracovnú tabuľu')}. Odpovede patria osobnému/firemného profilu, tabuľa drží stav a ďalší krok. ${link('Mapa systému.md', 'Mapa')} vysvetľuje oblasti; ${link('AI OS/Systém/Návody/Synchronizácia a zálohovanie.md', 'návod k úložisku')} umožňuje začať lokálne a vrátiť sa ku cloudu neskôr.
+
+## Oprávnenia a opakovanie
+
+Lokálny AI klient musí mať oprávnenie na tento priečinok. Full access nevynucuj. Cloudový model môže spracovať načítané údaje; nevkladaj heslá či tokeny. Inštalácia nemení globálny config, neprihlasuje účty a nenastavuje cloud.
+
+Opakovaná inštalácia tej istej verzie iba skontroluje značku a súbory. Neobnovuje šablóny, neprepisuje tvoje poznámky ani checkboxy. Pri cudzom, staršom alebo čiastočnom stave zastaví zápis a vysvetlí potrebné rozhodnutie; update a automatická oprava zatiaľ nie sú dodané.`, RELEASE_DATE, ['Mapa systému.md', 'Pracovná tabuľa.md', 'AI OS/Tím/index.md']);
+  files['AI OS/Systém/Návody/Synchronizácia a zálohovanie.md'] = note('Synchronizácia a zálohovanie', 'guide', `## Môžeš začať lokálne
+
+Lokálny priečinok stačí na začiatok. Na tabuli zostáva jedna otvorená úloha Nastaviť synchronizáciu a zálohovanie. Neznamená to chybu ani dokončené zálohovanie. Keď budeš pripravený, vráť sa k tejto úlohe.
+
+## Ak si vyberieš existujúci cloudový priečinok
+
+Ak je správny priečinok už otvorený, agent si jeho cestu overí sám. Inak mu povedz presnú cestu a poskytovateľa. V aplikácii poskytovateľa over, že je priečinok celý dostupný offline, synchronizácia nie je pozastavená a nehlási chybu ani konflikt. Agent môže zaznamenať tvoje konkrétne potvrdenie; lokálny hash nepotvrdzuje stav vzdialeného cloudu. Pri neistote zostáva dotknutý obsah read-only, inštalácia ti potichu nevyberie iné miesto.
+
+## Neskorší prechod
+
+Najprv si zvoľ cloud a spôsob nezávislej zálohy, priprav plán a obnoviteľnú kópiu. Presun, prihlásenie do účtu, zmena nastavení alebo mazanie vyžadujú konkrétne zadanie. Agent ich nespustí iba preto, že si otvoril tento návod. Pred prácou z druhého zariadenia si over dokončenú synchronizáciu v UI poskytovateľa a nové načítanie kontextu.
+
+## Čo znamená dokončenie
+
+Synchronizácia a záloha sú dve odlišné veci. Úlohu uzavri až po potvrdení zvoleného úložiska, overení offline dostupnosti, prenosu skúšobného súboru na druhé zariadenie a obnovy zo zálohy v dohodnutom rozsahu. Potvrdenie ulož sem alebo do vlastného prevádzkového záznamu, tabuľa naň odkáže. Pri cloudovom umiestnení bez tohto dôkazu zostáva otvorená.`, RELEASE_DATE, ['Mapa systému.md', 'Pracovná tabuľa.md', 'Začnite tu.md']);
+  const model = JSON.parse(files['Procesy/system-nastavenie-firmy/model.yaml']);
+  model.version = SIMPLE_VERSION;
+  model.optional_followups = [{id:SIMPLE_SYNC_TASK, title:'Nastaviť synchronizáciu a zálohovanie', owner:'používateľ', next:'Začať lokálne alebo si neskôr zvoliť cloud a nezávislú zálohu; pred zmenou pripraviť plán.', detail:'AI OS/Systém/Návody/Synchronizácia a zálohovanie.md'}];
+  files['Procesy/system-nastavenie-firmy/model.yaml'] = encoded(model);
+  const followup = model.optional_followups.map(task => `- [ ] ${task.title} <!-- os:task:${task.id} -->
+  - Vlastník: ${task.owner}.
+  - Ďalší krok: ${task.next}
+  - Podklady: ${link(task.detail)}.`).join('\n');
+  files['Pracovná tabuľa.md'] = files['Pracovná tabuľa.md'].replace('## Neskôr\n\nZatiaľ bez ďalšej úlohy.', `## Neskôr\n\n${followup}`);
+  files['Mapa systému.md'] += `\n## Umiestnenie a zálohovanie\n\nZačať môžeš lokálne. Existujúci cloudový priečinok je dobrovoľná voľba, neznamená overenú zálohu. Zvolená cesta a používateľský dôkaz dostupnosti patria lokálnemu inštalačnému záznamu; všeobecné pravidlá sú v ${link('AI OS/Systém/Návody/Synchronizácia a zálohovanie.md')}. Otvorená úloha je iba na Pracovnej tabuli.\n`;
+  for (const [name, text] of Object.entries(files)) {
+    if (!name.endsWith('.md')) continue;
+    files[name] = text.replaceAll(`source: "company-os ${CORE_VERSION}"`, `source: "company-os ${SIMPLE_VERSION}"`).replaceAll(`created: "${RELEASE_DATE}"`, `created: "${SIMPLE_DATE}"`).replaceAll(`updated: "${RELEASE_DATE}"`, `updated: "${SIMPLE_DATE}"`).replaceAll('Foundation je technický prvý celok.', 'Toto je pripravený základ pracovného priestoru.').replaceAll('Foundation nemá ERP', 'Tento základ nemá ERP').replaceAll('Tento generovaný foundation prehľad', 'Tento generovaný prehľad').replaceAll('Tento foundation balík', 'Tento pripravený základ');
+  }
+  validateFiles(files);
+  return files;
+}
+
 export function ownershipFor(filename) {
   if (filename === 'AI OS/Tím/index.md' || filename === 'AI OS/Systém/Návody/Metadáta.md') return 'generated';
   if (['AGENTS.md', 'CLAUDE.md', 'AI OS/Systém/Schémy/poznamka.schema.json'].includes(filename) || filename.startsWith('AI OS/Postupy/')) return 'package';
