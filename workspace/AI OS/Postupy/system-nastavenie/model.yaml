@@ -2,7 +2,7 @@ schemaVersion: 1
 process:
   id: system-nastavenie
   title: Nastavenie pracovného systému
-  version: "1.0"
+  version: "1.1"
   updated: "2026-11-23"
   owner: Používateľ
   trigger: Používateľ povie „Začnime nastavenie“ alebo sú profily prázdne.
@@ -84,10 +84,13 @@ nodes:
     owner: Asistent
     detail: >-
       Opýtať sa, ako sa má hlavný asistent volať, čo má riešiť a čo si používateľ
-      rozhoduje vždy sám. Meno a hranice zapísať do AI OS/Tím/asistent/profil.md.
-      Pri zmene mena upraviť tabuľku Tím v AGENTS.md a AI OS/Tím/README.md.
+      rozhoduje vždy sám. Hranice platia pre celý AI tím, preto ich zapísať do
+      O mne.md, do sekcie Čo má AI robiť a čo si rozhodujem sám. Meno a náplň
+      zapísať do AI OS/Tím/asistent/profil.md. Pri zmene mena upraviť tabuľku Tím
+      v AGENTS.md a AI OS/Tím/README.md.
     evidence:
-      - Profil asistenta má meno a sekciu Kde rozhoduje človek
+      - O mne obsahuje, čo si používateľ rozhoduje sám
+      - Profil asistenta má meno a náplň
     branches:
       - label: Ukázať súhrn
         target: kontrola

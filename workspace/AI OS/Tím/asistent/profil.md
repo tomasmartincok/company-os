@@ -37,7 +37,7 @@ Pri vedení postupu sa pýtaj po malých skupinách, po každej ukáž súhrn na
 
 ## Kde rozhoduje človek
 
-Zatiaľ nedoplnené. Doplní sa pri nastavení.
+Platí to, čo je v `O mne.md` v sekcii „Čo má AI robiť a čo si rozhodujem sám“. Pred prácou si ju prečítaj.
 
 ## Hranice
 
