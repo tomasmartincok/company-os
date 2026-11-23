@@ -1,0 +1,137 @@
+schemaVersion: 1
+process:
+  id: system-nastavenie
+  title: Nastavenie pracovného systému
+  version: "1.1"
+  updated: "2026-11-23"
+  owner: Používateľ
+  trigger: Používateľ povie „Začnime nastavenie“ alebo sú profily prázdne.
+  input: Otvorený pracovný priečinok a používateľ, ktorý odpovedá na otázky.
+  output: Doplnené profily, pomenovaný asistent, pripravené priečinky v Práca a jeden ďalší krok na tabuli.
+  description: >-
+    Asistent sa pýta po malých skupinách, po každej ukáže súhrn na opravu a ukladá
+    iba potvrdené odpovede. Neznáme údaje označí, nevymýšľa ich.
+  start: rola
+owners:
+  - Používateľ
+  - Asistent
+notes:
+  - Otázky, ktoré už sú zodpovedané v profiloch, sa neopakujú.
+  - Používateľ môže nastavenie kedykoľvek prerušiť. Uložené odpovede zostávajú a pokračuje sa od prvej chýbajúcej.
+  - Heslá a prístupové údaje sa nezapisujú.
+nodes:
+  - id: rola
+    type: decision
+    title: Ste majiteľ firmy, alebo vo firme pracujete?
+    map_title: Majiteľ, alebo zamestnanec?
+    owner: Používateľ
+    human: true
+    detail: >-
+      Opýtať sa jednou otázkou. Od odpovede závisí, na čo sa asistent pýta ďalej
+      a aké priečinky vzniknú v Práca.
+    branches:
+      - label: Majiteľ
+        target: firma
+      - label: Zamestnanec
+        target: miesto
+  - id: firma
+    type: action
+    title: Doplniť prehľad firmy
+    owner: Asistent
+    detail: >-
+      Zistiť názov firmy a web, čo ponúka a komu, čím sa líši, kto za čo zodpovedá
+      a najviac tri aktuálne priority. Potvrdené zapísať do Prehľad firmy.md.
+      Vytvoriť priečinky Práca/Klienti, Práca/Príležitosti a Práca/Firma, každý
+      s krátkym README.md.
+    evidence:
+      - Prehľad firmy obsahuje ponuku, zákazníkov a priority
+      - Priečinky sú uvedené v Práca/README.md
+    branches:
+      - label: Pokračovať
+        target: osoba
+  - id: miesto
+    type: action
+    title: Doplniť prehľad pracovného miesta
+    owner: Asistent
+    detail: >-
+      Zistiť, kde používateľ pracuje, akú má rolu, za aké výsledky zodpovedá,
+      komu prácu odovzdáva a najviac tri aktuálne priority. V Prehľad firmy.md
+      premenovať sekcie tak, aby opisovali pracovné miesto, a zapísať potvrdené.
+      Vytvoriť priečinky Práca/Moje oblasti a Práca/Projekty, každý s krátkym
+      README.md, a upraviť riadok Práca v tabuľke Kam čo patrí v AGENTS.md.
+    evidence:
+      - Prehľad obsahuje rolu, zodpovednosti a priority
+      - Priečinky sú uvedené v Práca/README.md
+    branches:
+      - label: Pokračovať
+        target: osoba
+  - id: osoba
+    type: action
+    title: Doplniť osobný profil
+    owner: Asistent
+    detail: >-
+      Zistiť meno, či si používateľ želá tykanie alebo vykanie, aký tón
+      a podrobnosť odpovedí mu vyhovuje a ako sa rozhoduje. Potvrdené zapísať do
+      O mne.md a meno doplniť do poľa owner v hlavičkách profilov a tabule.
+    evidence:
+      - O mne obsahuje oslovenie a spôsob komunikácie
+    branches:
+      - label: Pokračovať
+        target: asistent
+  - id: asistent
+    type: action
+    title: Pomenovať asistenta a dohodnúť hranice
+    owner: Asistent
+    detail: >-
+      Opýtať sa, ako sa má hlavný asistent volať, čo má riešiť a čo si používateľ
+      rozhoduje vždy sám. Hranice platia pre celý AI tím, preto ich zapísať do
+      O mne.md, do sekcie Čo má AI robiť a čo si rozhodujem sám. Meno a náplň
+      zapísať do AI OS/Tím/asistent/profil.md. Pri zmene mena upraviť tabuľku Tím
+      v AGENTS.md a AI OS/Tím/README.md.
+    evidence:
+      - O mne obsahuje, čo si používateľ rozhoduje sám
+      - Profil asistenta má meno a náplň
+    branches:
+      - label: Ukázať súhrn
+        target: kontrola
+  - id: kontrola
+    type: decision
+    title: Sedí súhrn?
+    owner: Používateľ
+    human: true
+    detail: >-
+      Asistent ukáže krátky súhrn všetkého, čo uložil, a kde to používateľ nájde.
+      Používateľ potvrdí alebo povie, čo opraviť.
+    branches:
+      - label: Áno
+        target: zapis
+      - label: Treba opraviť
+        target: oprava
+  - id: oprava
+    type: action
+    title: Opraviť nepresnosť
+    owner: Asistent
+    detail: Opraviť konkrétny údaj v dokumente, kde je uložený, a ukázať zmenu.
+    branches:
+      - label: Ukázať znova
+        target: kontrola
+  - id: zapis
+    type: action
+    title: Zapísať stav a ďalší krok
+    owner: Asistent
+    detail: >-
+      Na Pracovnej tabuli odškrtnúť hotové prvé kroky a do časti Teraz dať jeden
+      ďalší krok. Pridať krátky zápis do Denníka.
+    evidence:
+      - Tabuľa má jeden ďalší krok
+      - Denník má dnešný zápis
+    branches:
+      - label: Hotovo
+        target: hotovo
+  - id: hotovo
+    type: terminal
+    title: Systém pozná používateľa
+    owner: Používateľ
+    detail: >-
+      Overenie: v novom rozhovore sa používateľ opýta „Čo o mne a mojej firme
+      vieš?“ a asistent odpovie z uložených profilov.
