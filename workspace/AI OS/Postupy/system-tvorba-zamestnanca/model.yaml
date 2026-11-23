@@ -1,0 +1,99 @@
+schemaVersion: 1
+process:
+  id: system-tvorba-zamestnanca
+  title: Vytvorenie AI zamestnanca
+  version: "1.0"
+  updated: "2026-11-23"
+  owner: Používateľ
+  trigger: Používateľ chce AI zamestnanca pre konkrétnu oblasť alebo opakovanú úlohu.
+  input: Oblasť, požadovaný výsledok a doplnené profily.
+  output: Profil zamestnanca v AI OS/Tím a riadok v tabuľke tímu.
+  description: >-
+    Asistent z rozhovoru pripraví profil jedného zamestnanca s jednou jasnou
+    zodpovednosťou. Profil hovorí, čo robí, z čoho vychádza a kde rozhoduje človek.
+  start: zadanie
+owners:
+  - Používateľ
+  - Asistent
+notes:
+  - Zamestnanec nedostáva automaticky žiadne prístupy ani právomoci.
+  - Jeden zamestnanec má jednu hlavnú zodpovednosť. Ďalšie sa pridávajú neskôr.
+  - Počas tvorby sa nič neposiela ani nepublikuje.
+nodes:
+  - id: zadanie
+    type: action
+    title: Ujasniť oblasť a výsledok
+    owner: Asistent
+    detail: >-
+      Zistiť, pre akú oblasť má zamestnanec byť a aký jeden opakovaný výsledok má
+      doručovať. Vychádzať z potvrdeného firemného kontextu.
+    branches:
+      - label: Pokračovať
+        target: podobny
+  - id: podobny
+    type: decision
+    title: Existuje už podobný profil?
+    owner: Asistent
+    detail: Pozrieť AI OS/Tím. Ak podobný zamestnanec existuje, nový nevzniká.
+    branches:
+      - label: Nie
+        target: rozhovor
+      - label: Áno
+        target: uprava
+  - id: uprava
+    type: action
+    title: Navrhnúť úpravu existujúceho profilu
+    owner: Asistent
+    detail: Ukázať existujúci profil a navrhnúť, čo doň doplniť namiesto nového zamestnanca.
+    branches:
+      - label: Ukázať návrh
+        target: potvrdenie
+  - id: rozhovor
+    type: action
+    title: Zistiť podrobnosti
+    owner: Asistent
+    detail: >-
+      Pýtať sa na meno zamestnanca, zdroje, z ktorých vychádza, nástroje, spôsob
+      kontroly výsledku, miesto výstupov a hranice. Chýbajúce údaje nevymýšľať.
+    branches:
+      - label: Pripraviť návrh
+        target: navrh
+  - id: navrh
+    type: action
+    title: Pripraviť návrh profilu
+    owner: Asistent
+    detail: Zostaviť návrh podľa AI OS/Systém/Šablóna profilu.md a ukázať ho celý.
+    branches:
+      - label: Ukázať návrh
+        target: potvrdenie
+  - id: potvrdenie
+    type: decision
+    title: Potvrdenie profilu
+    owner: Používateľ
+    human: true
+    detail: Používateľ profil potvrdí alebo povie, čo zmeniť.
+    branches:
+      - label: Potvrdené
+        target: vytvorenie
+      - label: Zmeniť
+        target: navrh
+  - id: vytvorenie
+    type: action
+    title: Uložiť profil a zapísať do tímu
+    owner: Asistent
+    detail: >-
+      Uložiť AI OS/Tím/<id>/profil.md. Pridať riadok do tabuľky Tím v AGENTS.md
+      a do AI OS/Tím/README.md. Aktualizovať Pracovnú tabuľu a Denník.
+    evidence:
+      - Profil existuje
+      - Zamestnanec je v oboch prehľadoch tímu
+    branches:
+      - label: Hotovo
+        target: hotovo
+  - id: hotovo
+    type: terminal
+    title: Zamestnanec je pripravený
+    owner: Používateľ
+    detail: >-
+      Asistent vysvetlí, kde profil je a ako zamestnanca osloviť. Ďalší krok je
+      jeho prvý pracovný postup.
